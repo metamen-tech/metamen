@@ -1,0 +1,59 @@
+{
+  "model_config": {
+    "target_model": "gemini-3-pro-image-preview",
+    "resolution_target": "Pixel Art (16-bit style, matching provided character aesthetic)",
+    "aspect_ratio": "1:1 (Square, suitable for character portrait)"
+  },
+  "action_directive": "GENERATE a detailed PIXEL ART image of the character described below, maintaining extreme fidelity to the provided reference character's identity, style, and physical attributes. The output must be a high-quality pixel art rendition.",
+  "subject": {
+    "description": "A very obese bald man with a goatee, rendered in a low-resolution pixel art style, standing in a full-body pose.",
+    "face": {
+      "identity_source": "BASE_CHARACTER_MODEL_6 (The obese bald man with a goatee)",
+      "preserve_original": true,
+      "expression": "Neutral, slightly weary or stern facial expression, as seen in the reference character.",
+      "makeup": "None. Pixel art representation of facial features, including defined pixelated eyes, nose, and mouth.",
+      "hair": {
+        "color": "None (Bald)",
+        "style": "Completely bald head (smooth pixelated dome).",
+        "beard": "A distinct, pixelated black/dark brown goatee (mustache connected to a chin beard)."
+      }
+    },
+    "physique": {
+      "complexion": "Very obese build, large round protruding belly that is covered by the shirt, thick arms and legs, overall rounded pixelated shape. The skin tone is medium/tan.",
+      "age": "Adult (Indeterminate, based on character style)",
+      "height": "Short to average (implied by body proportions in pixel art)"
+    },
+    "clothing": {
+      "top": {
+        "type": "T-shirt",
+        "color": "Light Grey (Pixelated)",
+        "texture": "Cotton (Implied by pixel art texture), short sleeves, stretched tight over the large belly.",
+        "details": "Pixelated brown stains and dirt marks scattered across the front, visible stretching lines."
+      },
+      "bottom": {
+        "type": "Shorts",
+        "color": "Dark Grey / Faded Black (Pixelated)",
+        "texture": "Cotton / Canvas (Implied by pixel art texture).",
+        "details": "Tattered and frayed hems, stains and dirt marks."
+      }
+    },
+    "accessories": {
+      "belt": "None visible.",
+      "shoes": "Brown pixelated shoes or boots.",
+      "jewelry": "None.",
+      "acquired_items": "[BLANK FOR FUTURE USE: Insert pixel art descriptions of acquired items here, e.g., 'Wearing a pixelated baseball cap', 'Holding a pixelated fishing rod']"
+    }
+  },
+  "environment": {
+    "location": "Simple, neutral light grey pixelated background, as seen in the reference image, to emphasize the character.",
+    "lighting": "Even, flat pixel art lighting, no harsh shadows, highlighting the character's form and colors.",
+    "atmosphere": "Neutral, studio-like character portrait setting."
+  },
+  "technical_meta": {
+    "camera": "N/A (Pixel Art Rendition)",
+    "lens": "N/A (Pixel Art Rendition)",
+    "output_quality": "High-quality pixel art, clean lines within the pixel grid, accurate color palette based on the reference.",
+    "artifacts": "Inherently pixelated structure, no other digital artifacts.",
+    "aesthetic": "16-bit retro game sprite, low-resolution pixel art character design."
+  }
+}
