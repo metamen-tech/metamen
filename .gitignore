@@ -22,8 +22,6 @@
 
 # misc
 .DS_Store
-desktop.ini
-.agent/
 *.pem
 
 # debug
