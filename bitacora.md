@@ -140,8 +140,8 @@ FORMATO POR TAREA:
 - **Archivos creados/modificados**: package.json, pnpm-lock.yaml
 - **Tests**: N/A (tarea de configuración)
 - **Validación**: `pnpm install` exit 0 ✅; 15/15 scripts presentes ✅; engines estrictos (node>=20, pnpm>=9) ✅; Next.js/React fijados con tilde (~) ✅; pnpm.overrides.sharp ✅; 27 dependencies + 17 devDependencies
-- **Commit**: Pendiente
-- **Notas**: BullMQ incluido per especificación de Caja 02 como backup de Inngest. Warning no-crítico en bin de supabase CLI (ENOENT bin path). 3 subdependencias deprecated (no críticas).
+- **Commit**: `5c83aa7` — fix(02.1.3): authorise build scripts via pnpm approve-builds
+- **Notas**: BullMQ incluido per especificación de Caja 02 como backup de Inngest. 3 subdependencias deprecated (glob, node-domexception, serialize-error-cjs) confirmadas como transitivas inalterables de Supabase/Inngest (aceptadas como deuda técnica). Error `ENOENT` del CLI de Supabase resuelto autorizando explícitamente la post-instalación en pnpm v10 (`pnpm approve-builds`).
 
 ---
 
@@ -149,7 +149,7 @@ FORMATO POR TAREA:
 
 <!-- Registrar aquí problemas encontrados que no se resuelven en la tarea actual -->
 
-_Sin issues registrados._
+- **[DEPENDENCIAS] 3 Subdependencias Transitivas Deprecated**: `glob@10.5.0`, `node-domexception@1.0.0`, `serialize-error-cjs@0.1.4` reportan warnings al instalar. Se confirma mediante `pnpm why` que provienen internamente de las dependencias raíz `@supabase/ssr` e `inngest`. **No accionable:** El override explícito rompe la cadena interna. Se documenta como deuda técnica pasiva a la espera de que los dueños de los paquetes actualicen sus dependencias internas. Efecto nulo en producción o funcionalidad del motor.
 
 ---
 
@@ -160,3 +160,4 @@ _Sin issues registrados._
 - 2026-02-22 13:00 — Verificada tarea 02.1.1 (Node.js v20.18.0 + pnpm 10.28.2).
 - 2026-02-22 13:03 — Completada tarea 02.1.2 (scaffold Next.js + validación de arranque y estructura).
 - 2026-02-22 16:35 — Completada tarea 02.1.3 (package.json completo: engines, 15 scripts, 27+17 deps).
+- 2026-02-22 20:00 — [FIX] Warning de `supabase.EXE` resuelto autorizando los scripts de construcción de dependencias con `pnpm approve-builds supabase`. Las 3 dependencias deprecated se auditaron y se documentaron como deuda técnica inalterable en la bitácora. Instalación impecable.
