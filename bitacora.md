@@ -12,21 +12,21 @@
 
 ## ESTADO GENERAL
 
-| Campo                   | Valor                                                                         |
-| ----------------------- | ----------------------------------------------------------------------------- |
-| Fase actual             | MVP v1.0                                                                      |
-| Caja en curso           | **CAJA MVP-02: Infraestructura**                                              |
-| Última tarea completada | `02.2.1-HF1` — Fix warning de detección del plugin Next en ESLint flat config |
-| Próxima tarea           | `02.2.3` — Instalar dependencias linting y knip                               |
-| Bloqueadores            | Ninguno                                                                       |
-| Fecha inicio proyecto   | 2026-02-21                                                                    |
-| Último commit           | `38cc5ae` — test(verify)                                                      |
-| Branch                  | main                                                                          |
+| Campo                   | Valor                                           |
+| ----------------------- | ----------------------------------------------- |
+| Fase actual             | MVP v1.0                                        |
+| Caja en curso           | **CAJA MVP-02: Infraestructura**                |
+| Última tarea completada | `02.2.3` — Instalar dependencias linting y knip |
+| Próxima tarea           | `02.2.4` — Verificar pipeline linting completo  |
+| Bloqueadores            | Ninguno                                         |
+| Fecha inicio proyecto   | 2026-02-21                                      |
+| Último commit           | `38cc5ae` — test(verify)                        |
+| Branch                  | main                                            |
 
 ## MAPA DE PROGRESO
 
 ```
-CAJA MVP-02: Infraestructura     [▓▓▓▓░░░░░░] 11/96  ← EN CURSO
+CAJA MVP-02: Infraestructura     [▓▓▓▓▓░░░░░] 12/96  ← EN CURSO
 CAJA MVP-03: Base de Datos       [░░░░░░░░░░] 0/??
 CAJA MVP-04: Motor Core          [░░░░░░░░░░] 0/??
 CAJA MVP-05: Auth/Onboarding     [░░░░░░░░░░] 0/??
@@ -242,6 +242,17 @@ FORMATO POR TAREA:
 - **Commit**: pendiente (se registra en commit de esta tarea)
 - **Notas**: Se removieron `*.config.mjs` y `*.config.js` del bloque `ignores` para que `next lint` pueda detectar `@next/next` al resolver la config.
 
+### [02.2.3] — Instalar dependencias linting y knip
+
+- **Estado**: ✅ COMPLETADA
+- **Fecha**: 2026-02-24 02:04
+- **Tipo**: [BASH]
+- **Archivos creados/modificados**: `knip.config.ts`, `eslint.config.mjs`, `package.json`, `pnpm-lock.yaml`, `bitacora.md`
+- **Tests**: N/A (tarea de tooling)
+- **Validación**: `pnpm ls --dev --depth=0` confirma deps requeridas ✅; `pnpm knip` ejecuta (reporta findings esperados, sin crash) ✅; `pnpm knip` detecta `src/test-dead-code-temp.ts` ✅; `pnpm lint` exit 0 ✅; `pnpm build` exit 0 ✅; `pnpm type-check` exit 0 ✅; `pnpm format:check` exit 0 ✅; limpieza de temporales ✅
+- **Commit**: pendiente (se registra en commit de esta tarea)
+- **Notas**: `eslint-config-prettier` ya estaba instalado; se agregó únicamente `knip`. Se integró `eslint-config-prettier` como último config efectivo antes de `ignores`.
+
 ---
 
 ## ISSUES Y DEUDA TÉCNICA
@@ -275,3 +286,4 @@ FORMATO POR TAREA:
 - 2026-02-24 00:58 — Completada tarea 02.2.1: migración a ESLint 9 flat config (`eslint.config.mjs`) con `typescript-eslint`, `eslint-plugin-security` e `import-x`; verificados lint/build/type-check y detección de reglas con archivos temporales.
 - 2026-02-24 01:32 — Completada tarea 02.2.2: configuración de Prettier + plugin Tailwind + EditorConfig; ejecutados `format:check/format/lint/build/type-check`.
 - 2026-02-24 01:47 — Hotfix 02.2.1-HF1: removidos ignores `*.config.mjs`/`*.config.js` en ESLint flat config para eliminar warning de detección del plugin Next.
+- 2026-02-24 02:04 — Completada tarea 02.2.3: agregado `knip`, script `pnpm knip`, `knip.config.ts` y bridge final `eslint-config-prettier` en ESLint.

@@ -23,6 +23,7 @@
     "clean": "rm -rf .next node_modules",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
+    "knip": "knip",
     "verify": "bash scripts/verify-setup.sh",
     "inngest:dev": "inngest-cli dev"
   },
@@ -78,6 +79,7 @@
     "fast-check": "^4.0.0",
     "husky": "^9.0.0",
     "inngest-cli": "^1.3.0",
+    "knip": "^5.85.0",
     "playwright": "^1.58.2",
     "prettier": "^3.4.0",
     "prettier-plugin-tailwindcss": "^0.7.2",

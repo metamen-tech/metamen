@@ -4,6 +4,7 @@ import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 
 import { FlatCompat } from '@eslint/eslintrc';
+import eslintConfigPrettier from 'eslint-config-prettier';
 import importX from 'eslint-plugin-import-x';
 import security from 'eslint-plugin-security';
 import tseslint from 'typescript-eslint';
@@ -99,6 +100,9 @@ export default tseslint.config(
       },
     },
   },
+
+  // === Prettier bridge (disable conflicting ESLint stylistic rules) ===
+  eslintConfigPrettier,
 
   // === Ignores ===
   {
