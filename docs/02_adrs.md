@@ -19,86 +19,86 @@
 
 ### 2.1 Core Stack
 
-| Categoría | Tecnología | Versión |
-|-----------|------------|---------|
-| Framework | Next.js (App Router) | `^15.0.0` |
-| UI Library | React | `^19.0.0` |
-| Language | TypeScript | `^5.7.0` (strict) |
-| Styling | Tailwind CSS | `^4.0.0` |
-| Componentes | shadcn/ui | latest |
-| Animaciones | Framer Motion | `^11.15.0` |
-| Base de datos | PostgreSQL via Supabase | 15+ |
-| Auth | Supabase Auth | latest |
-| ORM | Supabase generated types | — |
-| Migraciones | Supabase CLI | latest |
-| Pagos | Stripe | `^17.0.0` |
-| IA/Imágenes | Gemini 2.5 Flash | latest |
-| Colas | Inngest + BullMQ (backup) | `^3.0.0` / `^5.34.0` |
-| Cache | React Query + Next.js Data Cache | — |
-| Storage | Supabase Storage | — |
-| Emails | Supabase Auth (nativo) | — |
-| Observabilidad | Sentry + PostHog + Vercel Analytics | — |
-| Hosting | Vercel | — |
-| Package Manager | pnpm | latest |
+| Categoría       | Tecnología                          | Versión              |
+| --------------- | ----------------------------------- | -------------------- |
+| Framework       | Next.js (App Router)                | `^15.0.0`            |
+| UI Library      | React                               | `^19.0.0`            |
+| Language        | TypeScript                          | `^5.7.0` (strict)    |
+| Styling         | Tailwind CSS                        | `^4.0.0`             |
+| Componentes     | shadcn/ui                           | latest               |
+| Animaciones     | Framer Motion                       | `^11.15.0`           |
+| Base de datos   | PostgreSQL via Supabase             | 15+                  |
+| Auth            | Supabase Auth                       | latest               |
+| ORM             | Supabase generated types            | —                    |
+| Migraciones     | Supabase CLI                        | latest               |
+| Pagos           | Stripe                              | `^17.0.0`            |
+| IA/Imágenes     | Gemini 2.5 Flash                    | latest               |
+| Colas           | Inngest + BullMQ (backup)           | `^3.0.0` / `^5.34.0` |
+| Cache           | React Query + Next.js Data Cache    | —                    |
+| Storage         | Supabase Storage                    | —                    |
+| Emails          | Supabase Auth (nativo)              | —                    |
+| Observabilidad  | Sentry + PostHog + Vercel Analytics | —                    |
+| Hosting         | Vercel                              | —                    |
+| Package Manager | pnpm                                | latest               |
 
 ### 2.2 Dependencias Frontend
 
-| Paquete | Versión |
-|---------|---------|
-| `next` | `^15.0.0` |
-| `react` | `^19.0.0` |
-| `tailwindcss` | `^4.0.0` |
-| `framer-motion` | `^11.15.0` |
-| `class-variance-authority` | `^0.7.0` |
-| `clsx` | `^2.0.0` |
-| `tailwind-merge` | `^2.0.0` |
-| `lucide-react` | `^0.469.0` |
-| `recharts` | `^2.15.0` |
-| `immer` | `^10.0.0` |
-| `zustand` | `^5.0.0` |
+| Paquete                    | Versión    |
+| -------------------------- | ---------- |
+| `next`                     | `^15.0.0`  |
+| `react`                    | `^19.0.0`  |
+| `tailwindcss`              | `^4.0.0`   |
+| `framer-motion`            | `^11.15.0` |
+| `class-variance-authority` | `^0.7.0`   |
+| `clsx`                     | `^2.0.0`   |
+| `tailwind-merge`           | `^2.0.0`   |
+| `lucide-react`             | `^0.469.0` |
+| `recharts`                 | `^2.15.0`  |
+| `immer`                    | `^10.0.0`  |
+| `zustand`                  | `^5.0.0`   |
 
 ### 2.3 Dependencias Backend
 
-| Paquete | Versión |
-|---------|---------|
+| Paquete                 | Versión   |
+| ----------------------- | --------- |
 | `@supabase/supabase-js` | `^2.47.0` |
-| `@supabase/ssr` | `^0.5.0` |
-| `inngest` | `^3.0.0` |
-| `bullmq` | `^5.34.0` |
+| `@supabase/ssr`         | `^0.5.0`  |
+| `inngest`               | `^3.0.0`  |
+| `bullmq`                | `^5.34.0` |
 | `@google/generative-ai` | `^0.21.0` |
-| `stripe` | `^17.0.0` |
-| `zod` | `^3.23.0` |
-| `react-hook-form` | `^7.54.0` |
-| `@hookform/resolvers` | `^3.9.0` |
-| `date-fns` | `^4.1.0` |
-| `date-fns-tz` | `^3.2.0` |
-| `uuid` | `^11.0.0` |
+| `stripe`                | `^17.0.0` |
+| `zod`                   | `^3.23.0` |
+| `react-hook-form`       | `^7.54.0` |
+| `@hookform/resolvers`   | `^3.9.0`  |
+| `date-fns`              | `^4.1.0`  |
+| `date-fns-tz`           | `^3.2.0`  |
+| `uuid`                  | `^11.0.0` |
 
 ### 2.4 Dev Tools
 
-| Paquete | Versión |
-|---------|---------|
-| `typescript` | `^5.7.0` |
-| `vitest` | `^2.1.0` |
-| `fast-check` | `^3.0.0` |
+| Paquete                  | Versión   |
+| ------------------------ | --------- |
+| `typescript`             | `^5.7.0`  |
+| `vitest`                 | `^2.1.0`  |
+| `fast-check`             | `^3.0.0`  |
 | `@testing-library/react` | `^16.1.0` |
-| `playwright` | `^1.40.0` |
-| `eslint` | `^9.17.0` |
-| `prettier` | `^3.4.0` |
-| `husky` | latest |
-| `supabase` | `^2.0.0` |
+| `playwright`             | `^1.40.0` |
+| `eslint`                 | `^9.17.0` |
+| `prettier`               | `^3.4.0`  |
+| `husky`                  | latest    |
+| `supabase`               | `^2.0.0`  |
 
 ### 2.5 Tecnologías PROHIBIDAS
 
-| Tecnología | Razón |
-|------------|-------|
-| MongoDB / Firebase | Sin RLS nativo, vendor lock-in |
-| tRPC + Prisma | Server Actions + PG Functions suficiente |
-| DALL-E / Replicate / Fal.ai | Gemini 2.5 Flash es único proveedor |
-| Cloudflare R2 | Supabase Storage suficiente |
-| Resend | Supabase Auth nativo |
-| Redis standalone | React Query + Next.js Data Cache |
-| Python Backend | Elimina type safety E2E |
+| Tecnología                  | Razón                                    |
+| --------------------------- | ---------------------------------------- |
+| MongoDB / Firebase          | Sin RLS nativo, vendor lock-in           |
+| tRPC + Prisma               | Server Actions + PG Functions suficiente |
+| DALL-E / Replicate / Fal.ai | Gemini 2.5 Flash es único proveedor      |
+| Cloudflare R2               | Supabase Storage suficiente              |
+| Resend                      | Supabase Auth nativo                     |
+| Redis standalone            | React Query + Next.js Data Cache         |
+| Python Backend              | Elimina type safety E2E                  |
 
 ---
 
@@ -173,21 +173,21 @@ CREATE TYPE tool_type AS ENUM (
 
 ### 4.2 Tablas (13)
 
-| Tabla | Columnas clave |
-|-------|----------------|
-| `profiles` | id, nickname, email, base_avatar_id (1-6), locale, timezone, onboarding_completed, deleted_at |
-| `avatar_states` | user_id, aura_lvl, jawline_lvl, wealth_lvl, physique_lvl, social_lvl, env_lvl, health_points, current_level, streak_days, last_image_url, version |
-| `wallets` | user_id, btc_balance, total_earned, total_spent, today_earned, daily_cap (2000), version |
-| `subscriptions` | user_id, status, trial_starts_at, trial_ends_at, stripe_customer_id, stripe_subscription_id, current_period_end |
-| `daily_tasks` | user_id, task_category, task_type, status, vector_modifiers (JSONB), btc_reward, completed_at, expires_at |
-| `daily_logs` | user_id, day_number, log_date, vectors_snapshot (JSONB), day_status, health_delta, btc_earned |
-| `store_items` | id, name, category, rarity, price_btc, level_required, vector_requirements (JSONB), ai_token, is_active |
-| `inventory` | user_id, item_id, is_equipped, equipped_slot, locked_by_death, acquired_at |
-| `tool_progress` | user_id, tool_type, sessions_count, total_duration_seconds, tool_data (JSONB) |
-| `image_generation_queue` | user_id, base_avatar_id, vectors_snapshot (JSONB), equipped_items_tokens, status, result_url, attempts |
-| `notifications` | user_id, type, title, message, is_read, read_at, expires_at |
-| `activity_logs` | user_id, action, entity_type, entity_id, metadata (JSONB), ip_address, user_agent |
-| `idempotency_keys` | key, user_id, action, status, result (JSONB), expires_at |
+| Tabla                    | Columnas clave                                                                                                                                    |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `profiles`               | id, nickname, email, base_avatar_id (1-6), locale, timezone, onboarding_completed, deleted_at                                                     |
+| `avatar_states`          | user_id, aura_lvl, jawline_lvl, wealth_lvl, physique_lvl, social_lvl, env_lvl, health_points, current_level, streak_days, last_image_url, version |
+| `wallets`                | user_id, btc_balance, total_earned, total_spent, today_earned, daily_cap (2000), version                                                          |
+| `subscriptions`          | user_id, status, trial_starts_at, trial_ends_at, stripe_customer_id, stripe_subscription_id, current_period_end                                   |
+| `daily_tasks`            | user_id, task_category, task_type, status, vector_modifiers (JSONB), btc_reward, completed_at, expires_at                                         |
+| `daily_logs`             | user_id, day_number, log_date, vectors_snapshot (JSONB), day_status, health_delta, btc_earned                                                     |
+| `store_items`            | id, name, category, rarity, price_btc, level_required, vector_requirements (JSONB), ai_token, is_active                                           |
+| `inventory`              | user_id, item_id, is_equipped, equipped_slot, locked_by_death, acquired_at                                                                        |
+| `tool_progress`          | user_id, tool_type, sessions_count, total_duration_seconds, tool_data (JSONB)                                                                     |
+| `image_generation_queue` | user_id, base_avatar_id, vectors_snapshot (JSONB), equipped_items_tokens, status, result_url, attempts                                            |
+| `notifications`          | user_id, type, title, message, is_read, read_at, expires_at                                                                                       |
+| `activity_logs`          | user_id, action, entity_type, entity_id, metadata (JSONB), ip_address, user_agent                                                                 |
+| `idempotency_keys`       | key, user_id, action, status, result (JSONB), expires_at                                                                                          |
 
 ### 4.3 Funciones PostgreSQL (SECURITY DEFINER)
 
@@ -285,29 +285,29 @@ CREATE POLICY "inventory_select" ON inventory FOR SELECT USING (auth.uid() = use
 
 ### 5.2 Tokens Personajes (6)
 
-| ID | Key | Tokens |
-|----|-----|--------|
-| 1 | `EL_RASTAS` | `"brown dreadlocks, thick locks, round face, friendly eyes, warm brown skin"` |
-| 2 | `EL_GUARRO` | `"bald, shaved head, square jaw, small eyes, thick neck, tan skin"` |
-| 3 | `EL_PECAS` | `"curly red-brown hair, messy, freckles, thin face, sharp features, pale skin with freckles"` |
-| 4 | `EL_GREÑAS` | `"balding with long hair in back, goatee, angular face, deep set eyes, weathered skin"` |
-| 5 | `EL_GUERO` | `"blonde wavy hair, styled back, strong jaw, blue eyes, handsome, fair skin"` |
-| 6 | `EL_LIC` | `"black hair, receding hairline, rectangular glasses, stubble, tired eyes, olive skin"` |
+| ID  | Key         | Tokens                                                                                        |
+| --- | ----------- | --------------------------------------------------------------------------------------------- |
+| 1   | `EL_RASTAS` | `"brown dreadlocks, thick locks, round face, friendly eyes, warm brown skin"`                 |
+| 2   | `EL_GUARRO` | `"bald, shaved head, square jaw, small eyes, thick neck, tan skin"`                           |
+| 3   | `EL_PECAS`  | `"curly red-brown hair, messy, freckles, thin face, sharp features, pale skin with freckles"` |
+| 4   | `EL_GREÑAS` | `"balding with long hair in back, goatee, angular face, deep set eyes, weathered skin"`       |
+| 5   | `EL_GUERO`  | `"blonde wavy hair, styled back, strong jaw, blue eyes, handsome, fair skin"`                 |
+| 6   | `EL_LIC`    | `"black hair, receding hairline, rectangular glasses, stubble, tired eyes, olive skin"`       |
 
 ### 5.3 Tokens ENV (10 niveles)
 
-| ENV | Token |
-|-----|-------|
-| 1 | `"dark dirty street, trash, homeless setting"` |
-| 2 | `"dark alley, dim streetlight, urban decay"` |
-| 3 | `"cramped shared room, bunk bed, messy"` |
-| 4 | `"small studio apartment, basic furniture"` |
-| 5 | `"comfortable apartment, modern furniture"` |
-| 6 | `"own house, nice living room, garden"` |
-| 7 | `"modern house, designer interior, pool"` |
-| 8 | `"urban penthouse, city skyline view, luxury"` |
-| 9 | `"mansion, marble floors, chandelier, estate"` |
-| 10 | `"luxury penthouse, panoramic view, gold accents"` |
+| ENV | Token                                              |
+| --- | -------------------------------------------------- |
+| 1   | `"dark dirty street, trash, homeless setting"`     |
+| 2   | `"dark alley, dim streetlight, urban decay"`       |
+| 3   | `"cramped shared room, bunk bed, messy"`           |
+| 4   | `"small studio apartment, basic furniture"`        |
+| 5   | `"comfortable apartment, modern furniture"`        |
+| 6   | `"own house, nice living room, garden"`            |
+| 7   | `"modern house, designer interior, pool"`          |
+| 8   | `"urban penthouse, city skyline view, luxury"`     |
+| 9   | `"mansion, marble floors, chandelier, estate"`     |
+| 10  | `"luxury penthouse, panoramic view, gold accents"` |
 
 ### 5.4 Retry Policy
 
@@ -322,28 +322,25 @@ CREATE POLICY "inventory_select" ON inventory FOR SELECT USING (auth.uid() = use
 ```typescript
 // 1. Judgement Night (cron horario)
 inngest.createFunction(
-  { id: "judgement-night-cron" },
-  { cron: "0 * * * *" },
+  { id: 'judgement-night-cron' },
+  { cron: '0 * * * *' },
   // Procesa usuarios cuyo timezone marca 23:59, batch 50
 );
 
 // 2. Generación de imágenes (event-driven)
 inngest.createFunction(
-  { id: "process-image-queue", retries: 3 },
-  { event: "image/generate.requested" },
+  { id: 'process-image-queue', retries: 3 },
+  { event: 'image/generate.requested' },
   // Llama Gemini 2.5 Flash
 );
 
 // 3. Cleanup idempotency_keys (cada 6h)
-inngest.createFunction(
-  { id: "cleanup-cron" },
-  { cron: "0 */6 * * *" },
-);
+inngest.createFunction({ id: 'cleanup-cron' }, { cron: '0 */6 * * *' });
 
 // 4. Reset diario wallets
 inngest.createFunction(
-  { id: "daily-wallet-reset" },
-  { cron: "5 0 * * *" },
+  { id: 'daily-wallet-reset' },
+  { cron: '5 0 * * *' },
   // Resetea today_earned a 0
 );
 ```
@@ -356,12 +353,12 @@ inngest.createFunction(
 
 ### 7.1 Planes
 
-| Plan | Precio | Tipo |
-|------|--------|------|
-| Trial | $0 (5 días) | Sin tarjeta |
-| Semanal | $2.99 USD | Recurrente |
-| Mensual | $9.99 USD | Recurrente |
-| Protocolo 100 | $29.99 USD | One-time |
+| Plan          | Precio      | Tipo        |
+| ------------- | ----------- | ----------- |
+| Trial         | $0 (5 días) | Sin tarjeta |
+| Semanal       | $2.99 USD   | Recurrente  |
+| Mensual       | $9.99 USD   | Recurrente  |
+| Protocolo 100 | $29.99 USD  | One-time    |
 
 **❌ NO EXISTEN:** Plan Anual, Packs BTC Premium, Early Bird
 
@@ -379,11 +376,11 @@ REGISTRO
 
 ### 7.3 Stripe Webhooks (4)
 
-| Evento | Acción |
-|--------|--------|
-| `checkout.session.completed` | status = 'active' |
-| `invoice.paid` | Renovar periodo |
-| `invoice.payment_failed` | status = 'limbo' |
+| Evento                          | Acción               |
+| ------------------------------- | -------------------- |
+| `checkout.session.completed`    | status = 'active'    |
+| `invoice.paid`                  | Renovar periodo      |
+| `invoice.payment_failed`        | status = 'limbo'     |
 | `customer.subscription.deleted` | status = 'cancelled' |
 
 ---
@@ -392,26 +389,26 @@ REGISTRO
 
 ### 8.1 Capas
 
-| Capa | Implementación |
-|------|----------------|
-| Transporte | TLS 1.3, HSTS |
-| Auth | JWT + refresh tokens rotativos (Supabase) |
-| Autorización | RLS + SECURITY DEFINER |
-| Validación | Zod en Server Actions |
-| Auditoría | activity_logs |
+| Capa         | Implementación                            |
+| ------------ | ----------------------------------------- |
+| Transporte   | TLS 1.3, HSTS                             |
+| Auth         | JWT + refresh tokens rotativos (Supabase) |
+| Autorización | RLS + SECURITY DEFINER                    |
+| Validación   | Zod en Server Actions                     |
+| Auditoría    | activity_logs                             |
 
 ### 8.2 Rate Limits
 
-| Endpoint | Límite |
-|----------|--------|
-| Login | 5/hora |
-| Register | 3/hora |
-| Verify Phone | 3/hora |
-| Password Reset | 3/hora |
-| Complete Task | 50/hora |
-| Read Tasks | 100/min |
-| Store Purchase | 10/min |
-| Store Browse | 100/min |
+| Endpoint       | Límite  |
+| -------------- | ------- |
+| Login          | 5/hora  |
+| Register       | 3/hora  |
+| Verify Phone   | 3/hora  |
+| Password Reset | 3/hora  |
+| Complete Task  | 50/hora |
+| Read Tasks     | 100/min |
+| Store Purchase | 10/min  |
+| Store Browse   | 100/min |
 
 ### 8.3 Datos Sensibles
 
@@ -443,18 +440,18 @@ REGISTRO
 
 ## 10. OBSERVABILIDAD
 
-| Herramienta | Función |
-|-------------|---------|
-| Sentry | Error tracking, crash reporting |
-| PostHog | Product analytics, feature flags |
-| Vercel Analytics | Web Vitals, performance |
+| Herramienta      | Función                          |
+| ---------------- | -------------------------------- |
+| Sentry           | Error tracking, crash reporting  |
+| PostHog          | Product analytics, feature flags |
+| Vercel Analytics | Web Vitals, performance          |
 
 ### Alertas
 
-| Condición | Umbral |
-|-----------|--------|
-| Error rate | > 1% |
-| Latencia DB | > 500ms |
+| Condición     | Umbral            |
+| ------------- | ----------------- |
+| Error rate    | > 1%              |
+| Latencia DB   | > 500ms           |
 | Cola imágenes | > 1000 pendientes |
 
 ---
@@ -471,12 +468,12 @@ Flujos E2E (10%): Playwright
 
 ### Coverage Targets
 
-| Capa | Target |
-|------|--------|
-| Motor Core | 100% |
-| Server Actions | 80% |
-| Componentes React | 60% |
-| E2E críticos | Cubiertos |
+| Capa              | Target    |
+| ----------------- | --------- |
+| Motor Core        | 100%      |
+| Server Actions    | 80%       |
+| Componentes React | 60%       |
+| E2E críticos      | Cubiertos |
 
 ---
 
@@ -504,13 +501,13 @@ type UserId = string & { readonly __brand: 'UserId' };
 
 ### Naming
 
-| Elemento | Convención | Ejemplo |
-|----------|------------|---------|
-| DB columns | snake_case | `aura_lvl` |
-| DB indexes | prefix idx_ | `idx_profiles_user_id` |
-| Vector fields | sufijo _lvl | `jawline_lvl` |
-| Componentes | PascalCase | `AvatarCard` |
-| Funciones | camelCase | `calculateOverallScore` |
+| Elemento      | Convención   | Ejemplo                 |
+| ------------- | ------------ | ----------------------- |
+| DB columns    | snake_case   | `aura_lvl`              |
+| DB indexes    | prefix idx\_ | `idx_profiles_user_id`  |
+| Vector fields | sufijo \_lvl | `jawline_lvl`           |
+| Componentes   | PascalCase   | `AvatarCard`            |
+| Funciones     | camelCase    | `calculateOverallScore` |
 
 ---
 

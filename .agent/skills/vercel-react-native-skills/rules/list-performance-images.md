@@ -21,7 +21,7 @@ function ProductItem({ product }: { product: Product }) {
       <Image source={{ uri: product.imageUrl }} style={{ width: 100, height: 100 }} />
       <Text>{product.name}</Text>
     </View>
-  )
+  );
 }
 ```
 
@@ -30,7 +30,7 @@ function ProductItem({ product }: { product: Product }) {
 ```tsx
 function ProductItem({ product }: { product: Product }) {
   // Request a 200x200 image (2x for retina)
-  const thumbnailUrl = `${product.imageUrl}?w=200&h=200&fit=cover`
+  const thumbnailUrl = `${product.imageUrl}?w=200&h=200&fit=cover`;
 
   return (
     <View>
@@ -41,7 +41,7 @@ function ProductItem({ product }: { product: Product }) {
       />
       <Text>{product.name}</Text>
     </View>
-  )
+  );
 }
 ```
 

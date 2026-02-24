@@ -1,9 +1,15 @@
 # ════════════════════════════════════════════════════════════════════
+
 # RULES.md — METAMEN100 MVP v1.0
+
 # ════════════════════════════════════════════════════════════════════
+
 # Última actualización: 2026-02-19
+
 # Este archivo es LEY. Todo agente de código DEBE leerlo antes de
+
 # escribir una sola línea. Violaciones = revert inmediato.
+
 # ════════════════════════════════════════════════════════════════════
 
 ## 1. IDENTIDAD DEL PROYECTO
@@ -18,23 +24,24 @@
 
 ## 2. TECH STACK — NO NEGOCIABLE
 
-| Capa | Tecnología | Versión |
-|------|-----------|---------|
-| Framework | Next.js | 15 (App Router) |
-| UI | React | 19 |
-| Lenguaje | TypeScript | ultra-strict (`strict: true`, `noUncheckedIndexedAccess: true`) |
-| Estilos | Tailwind CSS | v4 (CSS-based config) |
-| Base de datos | Supabase (PostgreSQL) | — |
-| Auth | Supabase Auth | PKCE obligatorio, `flowType: 'pkce'` |
-| Storage | Supabase Storage | Buckets: `avatars` (público) |
-| Pagos | Stripe | Checkout Sessions + Webhooks |
-| IA Imágenes | Gemini 2.5 Flash | Generación visual de avatares |
-| Hosting | Vercel | Serverless |
-| Package Manager | pnpm | — |
-| Testing | Vitest + React Testing Library | — |
-| Linting | ESLint + Prettier | Config en Caja MVP-02 |
+| Capa            | Tecnología                     | Versión                                                         |
+| --------------- | ------------------------------ | --------------------------------------------------------------- |
+| Framework       | Next.js                        | 15 (App Router)                                                 |
+| UI              | React                          | 19                                                              |
+| Lenguaje        | TypeScript                     | ultra-strict (`strict: true`, `noUncheckedIndexedAccess: true`) |
+| Estilos         | Tailwind CSS                   | v4 (CSS-based config)                                           |
+| Base de datos   | Supabase (PostgreSQL)          | —                                                               |
+| Auth            | Supabase Auth                  | PKCE obligatorio, `flowType: 'pkce'`                            |
+| Storage         | Supabase Storage               | Buckets: `avatars` (público)                                    |
+| Pagos           | Stripe                         | Checkout Sessions + Webhooks                                    |
+| IA Imágenes     | Gemini 2.5 Flash               | Generación visual de avatares                                   |
+| Hosting         | Vercel                         | Serverless                                                      |
+| Package Manager | pnpm                           | —                                                               |
+| Testing         | Vitest + React Testing Library | —                                                               |
+| Linting         | ESLint + Prettier              | Config en Caja MVP-02                                           |
 
 ### Dependencias MVP aprobadas (únicas permitidas sin autorización):
+
 ```
 # Core
 next react react-dom typescript tailwindcss
@@ -58,6 +65,7 @@ vitest @testing-library/react @testing-library/jest-dom fast-check
 ```
 
 ### Dependencias PROHIBIDAS en MVP:
+
 ```
 ❌ framer-motion          → usar CSS transitions
 ❌ @tanstack/react-query  → Server Components + Suspense bastan
@@ -78,6 +86,7 @@ Cualquier dependencia NO listada en "aprobadas" requiere justificación escrita.
 ---
 
 ## 3. ESTRUCTURA DE CARPETAS
+
 ```
 src/
 ├── app/
@@ -124,6 +133,7 @@ src/
 ```
 
 ### Reglas de carpetas:
+
 - Cada directorio tiene `index.ts` como barrel export
 - Barrels solo re-exportan API pública, NUNCA funciones internas
 - `src/lib/core/` es zona PROHIBIDA de I/O — solo funciones puras
@@ -134,6 +144,7 @@ src/
 ## 4. PATRONES ARQUITECTÓNICOS
 
 ### 4.1 Server Components por defecto
+
 ```
 REGLA: Todo componente es Server Component HASTA que necesite interactividad.
 Solo agregar 'use client' cuando el componente usa:
@@ -150,6 +161,7 @@ PATRÓN: Client Islands
 ```
 
 ### 4.2 Data Fetching
+
 ```
 REGLA: Fetching SIEMPRE en Server Components. NUNCA en client con useEffect.
 
@@ -170,6 +182,7 @@ PROHIBIDO:
 ```
 
 ### 4.3 Server Actions
+
 ```
 REGLA: Toda mutación pasa por Server Actions en /src/actions/.
 
@@ -189,6 +202,7 @@ NUNCA:
 ```
 
 ### 4.4 Suspense per-section
+
 ```
 REGLA: Cada widget del dashboard tiene su propia Suspense boundary.
 
@@ -202,6 +216,7 @@ BENEFICIO: Una query lenta o fallida NO bloquea todo el dashboard.
 ```
 
 ### 4.5 Motor Core — Funciones Puras
+
 ```
 REGLA: /src/lib/core/ contiene SOLO lógica pura.
 
@@ -235,18 +250,19 @@ LAYER ARCHITECTURE:
 
 ### 5.1 Vectores (6)
 
-| Vector | DB Column | Rango | Peso | Color |
-|--------|-----------|-------|------|-------|
-| Aura | aura_lvl | 0.00-50.00 | 0.20 | purple-500 |
-| Jawline | jawline_lvl | 0.00-50.00 | 0.15 | cyan-500 |
-| Wealth | wealth_lvl | 0.00-50.00 | 0.20 | yellow-500 |
-| Physique | physique_lvl | 0.00-50.00 | 0.20 | red-500 |
-| Social | social_lvl | 0.00-50.00 | 0.15 | orange-500 |
-| Entorno | env_lvl | 1-10 (int) | 0.10 | green-500 |
+| Vector   | DB Column    | Rango      | Peso | Color      |
+| -------- | ------------ | ---------- | ---- | ---------- |
+| Aura     | aura_lvl     | 0.00-50.00 | 0.20 | purple-500 |
+| Jawline  | jawline_lvl  | 0.00-50.00 | 0.15 | cyan-500   |
+| Wealth   | wealth_lvl   | 0.00-50.00 | 0.20 | yellow-500 |
+| Physique | physique_lvl | 0.00-50.00 | 0.20 | red-500    |
+| Social   | social_lvl   | 0.00-50.00 | 0.15 | orange-500 |
+| Entorno  | env_lvl      | 1-10 (int) | 0.10 | green-500  |
 
 **Todos ASCENDENTES**. Suma de pesos = 1.0. Overall Score = Σ(weight × normalizedQuality) × 50 → rango 0-50.
 
 ### 5.2 Tareas (17 categorías → 5 arquetipos)
+
 ```
 MENTAL → AURA:     meditation(+0.50), thanks(+0.50), posture(+1.16), wake_early(+0.50)
 FACIAL → JAWLINE:  facial(+1.16), voice(+1.16), cold_shower(+1.78)
@@ -257,16 +273,17 @@ SOCIAL → SOCIAL:   talk_friend(+1.78), family(+1.78), kegel(+0.70), journal(+0
 
 ### 5.3 Personajes (6)
 
-| ID | Nombre | Vector Primario |
-|----|--------|----------------|
-| 1 | EL RASTAS | SOCIAL |
-| 2 | EL GUARRO | PHYSIQUE |
-| 3 | EL PECAS | WEALTH |
-| 4 | EL GREÑAS | AURA |
-| 5 | EL GÜERO | JAWLINE |
-| 6 | EL LIC | ENV |
+| ID  | Nombre    | Vector Primario |
+| --- | --------- | --------------- |
+| 1   | EL RASTAS | SOCIAL          |
+| 2   | EL GUARRO | PHYSIQUE        |
+| 3   | EL PECAS  | WEALTH          |
+| 4   | EL GREÑAS | AURA            |
+| 5   | EL GÜERO  | JAWLINE         |
+| 6   | EL LIC    | ENV             |
 
 ### 5.4 Niveles Clave (13 total)
+
 ```
 Nivel 1  (Indigente):       day≥1,  score≥0.0    → North Star: día 1
 Nivel 3  (Alucín):          day≥6,  score≥10.0   → North Star: MOMENTO DE CONVERSIÓN
@@ -276,6 +293,7 @@ Nivel 13 (Ascendido):       day≥300, score≥49.0  → Aspiracional post-game
 ```
 
 ### 5.5 Fórmulas Clave
+
 ```
 Diminishing Returns:  base × max(0.25, 0.90^(rep-1))     → piso 25%
 BTC Reward:           base × levelMult × streakMult × subMult × healthPenalty × diminishing
@@ -292,6 +310,7 @@ Mercy Rule:           ≥80% completion → no pierdes corazones (streak +1)
 ## 6. CONVENCIONES DE CÓDIGO
 
 ### 6.1 TypeScript
+
 ```typescript
 // SIEMPRE: const assertions para enums
 const VECTOR_NAME = {
@@ -299,7 +318,7 @@ const VECTOR_NAME = {
   JAWLINE: 'jawline_lvl',
   // ...
 } as const;
-type VectorName = typeof VECTOR_NAME[keyof typeof VECTOR_NAME];
+type VectorName = (typeof VECTOR_NAME)[keyof typeof VECTOR_NAME];
 
 // NUNCA: TS enums (tree-shaking issues)
 // ❌ enum VectorName { AURA = 'aura_lvl' }
@@ -325,6 +344,7 @@ type VectorValue = number & { readonly __brand: 'VectorValue' };
 ```
 
 ### 6.2 React
+
 ```tsx
 // Server Component (default — sin directiva)
 export default async function StatusCards() {
@@ -334,7 +354,7 @@ export default async function StatusCards() {
 }
 
 // Client Component (solo cuando necesario)
-'use client';
+('use client');
 import { useOptimistic, useTransition } from 'react';
 
 export function TaskItem({ task }: { task: DailyTask }) {
@@ -351,6 +371,7 @@ export function TaskItem({ task }: { task: DailyTask }) {
 ```
 
 ### 6.3 CSS / Tailwind
+
 ```
 REGLA: Mobile-first. Touch targets ≥ 44px.
 
@@ -373,13 +394,15 @@ PROHIBIDO:
 ```
 
 ### 6.4 Zod Schemas
+
 ```typescript
 // REGLA: Schemas compartidos client y server
 // Archivo: src/lib/validations/auth.ts
 
 export const registerSchema = z.object({
   email: z.string().email('Email inválido'),
-  password: z.string()
+  password: z
+    .string()
     .min(8, 'Mínimo 8 caracteres')
     .regex(/[A-Z]/, 'Requiere mayúscula')
     .regex(/[a-z]/, 'Requiere minúscula')
@@ -403,6 +426,7 @@ export async function registerAction(formData: FormData) {
 ## 7. BASE DE DATOS — REGLAS
 
 ### 7.1 Tablas Core MVP
+
 ```
 profiles, avatar_states, wallets, daily_tasks, daily_logs,
 subscriptions, image_queue, vector_snapshots,
@@ -410,6 +434,7 @@ audit_logs, game_config
 ```
 
 ### 7.2 Reglas
+
 ```
 - RLS habilitado en TODAS las tablas sin excepción
 - Política base: user_id = auth.uid() para SELECT/UPDATE/DELETE
@@ -423,6 +448,7 @@ audit_logs, game_config
 ```
 
 ### 7.3 Supabase Clients
+
 ```
 3 clientes, NUNCA intercambiar:
 
@@ -431,7 +457,7 @@ audit_logs, game_config
    - Usa ANON key (respeta RLS)
    - Para: auth.signInWithOAuth, realtime subscriptions
 
-2. Server Client (src/lib/supabase/server.ts)  
+2. Server Client (src/lib/supabase/server.ts)
    - createServerSupabaseClient() — Server Components + Server Actions
    - Usa ANON key + cookies (respeta RLS con sesión del usuario)
    - Para: queries, mutaciones autenticadas
@@ -446,6 +472,7 @@ audit_logs, game_config
 ---
 
 ## 8. SEGURIDAD — REGLAS
+
 ```
 - Variables con SERVICE_ROLE, SECRET: NUNCA prefijo NEXT_PUBLIC_
 - Server Actions: SIEMPRE verificar auth.getUser() como primer paso
@@ -461,6 +488,7 @@ audit_logs, game_config
 ---
 
 ## 9. TESTING — REGLAS
+
 ```
 - Vitest como test runner (configurado en Caja MVP-02)
 - Coverage target: ≥85% para src/lib/core/
@@ -478,6 +506,7 @@ audit_logs, game_config
 ## 10. GIT — CONVENCIONES
 
 ### Commits
+
 ```
 Formato: <type>(<scope>): <description>
 
@@ -501,6 +530,7 @@ Ejemplos:
 ```
 
 ### Branches
+
 ```
 main                → producción
 feat/caja-XX-desc   → feature por caja
@@ -510,6 +540,7 @@ fix/issue-desc      → hotfix
 ---
 
 ## 11. PERFORMANCE — BUDGETS
+
 ```
 - LCP < 1.5s en /dashboard (target 1.2s)
 - FCP < 0.8s
@@ -524,6 +555,7 @@ fix/issue-desc      → hotfix
 ---
 
 ## 12. ORDEN DE EJECUCIÓN MVP
+
 ```
 Caja MVP-01: Decisiones de scope (COMPLETADA — cuestionario)
 Caja MVP-02: Proyecto base (Next.js, TS, Tailwind, Supabase, Vitest, ESLint)
@@ -540,6 +572,7 @@ Caja MVP-10: Deploy & Launch (Vercel, env prod, monitoring básico)
 ---
 
 ## 13. COSAS QUE NO SON MVP (v1.1+)
+
 ```
 ❌ Phone verification (Twilio, SMS, OTP)
 ❌ Rate limiting con Redis (Upstash)
@@ -569,6 +602,7 @@ Caja MVP-10: Deploy & Launch (Vercel, env prod, monitoring básico)
 ---
 
 ## 14. REGLA FINAL — FILOSOFÍA
+
 ```
 CÓDIGO > DOCUMENTOS
 Si tienes duda entre documentar más o escribir código: ESCRIBE CÓDIGO.

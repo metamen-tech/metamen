@@ -1,65 +1,76 @@
 # METAMEN100 — PROJECT RULES
+
 # ══════════════════════════════════════════════════════════════
+
 # Este archivo es la CONSTITUCIÓN del proyecto.
+
 # Todo agente de IA (Claude Code, Antigravity, Codex, Cursor)
+
 # DEBE leer este archivo antes de ejecutar cualquier tarea.
+
 # Ubicación: raíz del proyecto /CLAUDE.md
+
 # Última actualización: 2026-02-21 (reset sesión inicial)
+
 # ══════════════════════════════════════════════════════════════
 
 ## 1. IDENTIDAD DEL PROYECTO
 
-| Campo | Valor |
-|-------|-------|
-| Nombre | MetaMen100 |
-| Tipo | Sistema Operativo de Conducta con IA generativa (gamificación) |
-| Fase | MVP v1.0 |
-| Estado actual | Sesión inicial (sin tareas ejecutadas) |
-| Documentación | Ver `/docs/cajas/` para tareas por ejecutar |
+| Campo         | Valor                                                          |
+| ------------- | -------------------------------------------------------------- |
+| Nombre        | MetaMen100                                                     |
+| Tipo          | Sistema Operativo de Conducta con IA generativa (gamificación) |
+| Fase          | MVP v1.0                                                       |
+| Estado actual | Sesión inicial (sin tareas ejecutadas)                         |
+| Documentación | Ver `/docs/cajas/` para tareas por ejecutar                    |
 
 ## 2. TECH STACK
 
-| Tecnología | Versión | Uso |
-|-----------|---------|-----|
-| Next.js | 15.x | Framework (App Router, Server Actions, Server Components) |
-| React | 19.x | UI |
-| TypeScript | 5.x | ultra-strict (`noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`) |
-| Tailwind CSS | v4 | Styling (dark mode, mobile-first) |
-| Supabase | latest | Auth + PostgreSQL + Storage + Realtime |
-| Stripe | latest SDK | Pagos (Checkout hosted, Customer Portal, webhooks) |
-| Gemini | 2.5 Flash | Generación de imágenes de avatar (pixel art) |
-| Resend | latest | Email transaccional (4 templates) |
-| Upstash Redis | latest | Rate limiting (auth, tasks, images) |
-| Inngest | latest | Background jobs (Judgement Night cron, image worker, emails) |
-| Vercel | N/A | Hosting + CI/CD auto-deploy |
-| Vitest | latest | Unit testing |
-| Zod | 3.x | Validación de schemas en boundaries |
-| Zustand | latest | Client state management |
-| Pino | latest | Structured logging |
-| Sentry | latest | Error tracking |
-| PostHog | latest | Analytics + funnel tracking |
+| Tecnología    | Versión    | Uso                                                                     |
+| ------------- | ---------- | ----------------------------------------------------------------------- |
+| Next.js       | 15.x       | Framework (App Router, Server Actions, Server Components)               |
+| React         | 19.x       | UI                                                                      |
+| TypeScript    | 5.x        | ultra-strict (`noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`) |
+| Tailwind CSS  | v4         | Styling (dark mode, mobile-first)                                       |
+| Supabase      | latest     | Auth + PostgreSQL + Storage + Realtime                                  |
+| Stripe        | latest SDK | Pagos (Checkout hosted, Customer Portal, webhooks)                      |
+| Gemini        | 2.5 Flash  | Generación de imágenes de avatar (pixel art)                            |
+| Resend        | latest     | Email transaccional (4 templates)                                       |
+| Upstash Redis | latest     | Rate limiting (auth, tasks, images)                                     |
+| Inngest       | latest     | Background jobs (Judgement Night cron, image worker, emails)            |
+| Vercel        | N/A        | Hosting + CI/CD auto-deploy                                             |
+| Vitest        | latest     | Unit testing                                                            |
+| Zod           | 3.x        | Validación de schemas en boundaries                                     |
+| Zustand       | latest     | Client state management                                                 |
+| Pino          | latest     | Structured logging                                                      |
+| Sentry        | latest     | Error tracking                                                          |
+| PostHog       | latest     | Analytics + funnel tracking                                             |
 
 ## 3. REGLAS ABSOLUTAS DE CÓDIGO
 
 ### TypeScript
+
 - **CERO `any`** en todo el proyecto. Usar `unknown` + type narrowing.
 - `noUncheckedIndexedAccess: true` — todo acceso a array/record puede ser undefined.
 - `exactOptionalPropertyTypes: true` — `undefined` y optional son diferentes.
 - `noImplicitReturns: true`, `noFallthroughCasesInSwitch: true`.
 
 ### Next.js
+
 - **Server Components por defecto**. Solo `'use client'` cuando hay interactividad, hooks, o browser APIs.
 - **Server Actions para TODA mutación** (escritura DB). Ubicación: `src/actions/`. NUNCA API routes para CRUD.
 - **API routes** solo para: webhooks externos (Stripe, Inngest), health check.
 - **Middleware** (`src/middleware.ts`) para protección de rutas auth.
 
 ### Motor del Juego (`src/lib/core/`)
+
 - **100% funciones puras**: `f(input) → output`. Sin I/O, sin DB, sin fetch, sin side effects.
 - **Result<T,E> monad**: Nunca `throw` en funciones puras. Usar `ok(data)` / `err(error)`.
 - **Inmutabilidad**: Todo estado es `readonly`. Cada operación retorna nuevo estado.
 - **Regla de capas**: Layer N solo importa de Layer ≤ N-1. NUNCA dependencias circulares.
 
 ### Imports y Naming
+
 - **Siempre alias**: `@/lib/...`, `@/components/...`, `@/actions/...`. Nunca `../../..`.
 - **Archivos**: kebab-case (`avatar-state.ts`).
 - **Componentes**: PascalCase (`TaskCard.tsx`).
@@ -69,12 +80,14 @@
 - **Enums**: PascalCase con valores UPPER_SNAKE (`VectorName.AURA`).
 
 ### Testing
+
 - **Vitest** para unit tests.
 - Cada archivo en `src/lib/core/` DEBE tener su `.test.ts`.
 - Tests de funciones puras: input → output, edge cases.
 - Nombre de tests: `describe('functionName')` → `it('should [behavior] when [condition]')`.
 
 ### Commits
+
 - **Conventional Commits obligatorio**.
 - Formato: `tipo(ID_TAREA): descripción breve`
 - Tipos: `feat:`, `fix:`, `refactor:`, `test:`, `chore:`, `docs:`
@@ -83,6 +96,7 @@
 - **Un commit por tarea ejecutada**.
 
 ### UI / Design
+
 - **Mobile-first** obligatorio. Todo componente se diseña para 375px primero.
 - **Dark mode** obligatorio. No hay light mode.
 - **Color palette "Gentleman's Club"**:
@@ -216,8 +230,10 @@ PASO 8 — PUSH: `git push origin main`
 ```
 
 Formato de entrada en BITACORA.md:
+
 ```markdown
 ### [ID_TAREA] — Título
+
 - **Estado**: ✅ COMPLETADA
 - **Fecha**: YYYY-MM-DD HH:MM
 - **Archivos**: ruta/archivo1.ts, ruta/archivo2.ts
@@ -228,18 +244,18 @@ Formato de entrada en BITACORA.md:
 
 ## 7. ERRORES COMUNES — PROHIBIDOS
 
-| Error | Corrección |
-|-------|-----------|
-| Usar `any` | Usar `unknown` + type guard o tipo específico |
-| `useEffect` para fetch de datos | Usar Server Component con `async` |
-| API route para CRUD | Usar Server Action en `src/actions/` |
-| Import circular en `lib/core` | Respetar capas: Layer N solo importa ≤ N-1 |
-| `localStorage` | Usar Zustand o cookies |
-| Strings hardcodeados de categorías | Usar enums de `@/lib/constants/game.ts` |
-| `throw` en función pura | Retornar `err()` con Result monad |
-| Generar imagen con 0% completion | Verificar `completion > 0` antes de encolar |
-| Commit sin ID de tarea | Formato: `feat(02.1.1): descripción` |
-| Olvidar actualizar BITACORA.md | SIEMPRE actualizar después de cada tarea |
+| Error                              | Corrección                                    |
+| ---------------------------------- | --------------------------------------------- |
+| Usar `any`                         | Usar `unknown` + type guard o tipo específico |
+| `useEffect` para fetch de datos    | Usar Server Component con `async`             |
+| API route para CRUD                | Usar Server Action en `src/actions/`          |
+| Import circular en `lib/core`      | Respetar capas: Layer N solo importa ≤ N-1    |
+| `localStorage`                     | Usar Zustand o cookies                        |
+| Strings hardcodeados de categorías | Usar enums de `@/lib/constants/game.ts`       |
+| `throw` en función pura            | Retornar `err()` con Result monad             |
+| Generar imagen con 0% completion   | Verificar `completion > 0` antes de encolar   |
+| Commit sin ID de tarea             | Formato: `feat(02.1.1): descripción`          |
+| Olvidar actualizar BITACORA.md     | SIEMPRE actualizar después de cada tarea      |
 
 ## 8. BASE DE DATOS — TABLAS (13)
 
@@ -262,11 +278,13 @@ notifications     → Emails enviados (type, sent_at)
 ## 9. MCPs / SKILLS A CONFIGURAR
 
 Si el agente soporta MCPs (Model Context Protocol):
+
 - **Supabase MCP**: Para ejecutar SQL directo, ver schema, hacer queries
 - **Vercel MCP**: Para ver deploys, logs, env vars (opcional)
 - **Git MCP**: Para operaciones git sin salir del agente (opcional)
 
 Para Claude Code específicamente:
+
 - Configurar en `~/.claude/settings.json` o via `claude mcp add`
 - Supabase MCP es el más útil para Caja 03 (todo es SQL)
 
@@ -274,6 +292,7 @@ Para Claude Code específicamente:
 
 Al inicio de CADA conversación con un agente, pegar el contenido de `INIT_PROMPT.md`.
 Esto asegura que el agente:
+
 1. Lee CLAUDE.md (rules)
 2. Lee BITACORA.md (estado actual)
 3. Identifica la próxima tarea a ejecutar

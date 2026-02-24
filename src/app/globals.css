@@ -1,68 +1,68 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 :root {
   /* === Fondos (Sistema de Elevacion) === */
-  --color-bg-base: #0A0A0A;
-  --color-bg-card: #1A1A1A;
-  --color-bg-elevated: #2D2D2D;
+  --color-bg-base: #0a0a0a;
+  --color-bg-card: #1a1a1a;
+  --color-bg-elevated: #2d2d2d;
 
   /* === Accent (Sistema Dual) === */
-  --color-accent-gold: #D4AF37;
-  --color-accent-gold-hover: #B8941F;
-  --color-accent-cta: #FF073A;
-  --color-accent-cta-hover: #DC143C;
-  --color-accent-active: #00E5FF;
+  --color-accent-gold: #d4af37;
+  --color-accent-gold-hover: #b8941f;
+  --color-accent-cta: #ff073a;
+  --color-accent-cta-hover: #dc143c;
+  --color-accent-active: #00e5ff;
 
   /* === Estados Semanticos === */
-  --color-state-error: #FF0000;
-  --color-state-success: #00FF88;
-  --color-state-warning: #FFB800;
-  --color-state-info: #00E5FF;
+  --color-state-error: #ff0000;
+  --color-state-success: #00ff88;
+  --color-state-warning: #ffb800;
+  --color-state-info: #00e5ff;
 
   /* === Texto === */
-  --color-text-primary: #FFFFFF;
-  --color-text-glow: #F8FFFF;
-  --color-text-secondary: #B0B0B0;
+  --color-text-primary: #ffffff;
+  --color-text-glow: #f8ffff;
+  --color-text-secondary: #b0b0b0;
   --color-text-disabled: #808080;
 
   /* === Vectores === */
-  --color-vector-aura: #9B59B6;
-  --color-vector-aura-secondary: #E8D5F2;
-  --color-vector-jawline: #E74C3C;
-  --color-vector-jawline-secondary: #FADBD8;
-  --color-vector-wealth: #27AE60;
-  --color-vector-wealth-secondary: #D5F5E3;
-  --color-vector-physique: #E67E22;
-  --color-vector-physique-secondary: #FDEBD0;
-  --color-vector-social: #3498DB;
-  --color-vector-social-secondary: #D6EAF8;
-  --color-vector-env: #1ABC9C;
-  --color-vector-env-secondary: #D1F2EB;
+  --color-vector-aura: #9b59b6;
+  --color-vector-aura-secondary: #e8d5f2;
+  --color-vector-jawline: #e74c3c;
+  --color-vector-jawline-secondary: #fadbd8;
+  --color-vector-wealth: #27ae60;
+  --color-vector-wealth-secondary: #d5f5e3;
+  --color-vector-physique: #e67e22;
+  --color-vector-physique-secondary: #fdebd0;
+  --color-vector-social: #3498db;
+  --color-vector-social-secondary: #d6eaf8;
+  --color-vector-env: #1abc9c;
+  --color-vector-env-secondary: #d1f2eb;
 
   /* === Niveles === */
-  --color-level-low: #95A5A6;
-  --color-level-mid: #8D6E63;
-  --color-level-high: #3498DB;
-  --color-level-elite: #D4AF37;
-  --color-level-god: #9B59B6;
+  --color-level-low: #95a5a6;
+  --color-level-mid: #8d6e63;
+  --color-level-high: #3498db;
+  --color-level-elite: #d4af37;
+  --color-level-god: #9b59b6;
 
   /* === Rarezas === */
-  --color-rarity-common: #95A5A6;
-  --color-rarity-rare: #3498DB;
-  --color-rarity-epic: #9B59B6;
-  --color-rarity-legendary: #D4AF37;
+  --color-rarity-common: #95a5a6;
+  --color-rarity-rare: #3498db;
+  --color-rarity-epic: #9b59b6;
+  --color-rarity-legendary: #d4af37;
 
   /* === Avatares === */
-  --color-avatar-rastas: #9B59B6;
-  --color-avatar-guarro: #E74C3C;
-  --color-avatar-pecas: #27AE60;
-  --color-avatar-greñas: #E67E22;
-  --color-avatar-guero: #3498DB;
-  --color-avatar-lic: #1ABC9C;
+  --color-avatar-rastas: #9b59b6;
+  --color-avatar-guarro: #e74c3c;
+  --color-avatar-pecas: #27ae60;
+  --color-avatar-greñas: #e67e22;
+  --color-avatar-guero: #3498db;
+  --color-avatar-lic: #1abc9c;
 
   /* === Tipografia === */
-  --font-sans: "Inter", system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", monospace;
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
   --font-size-hero: 3rem;
   --font-size-h1: 2rem;
   --font-size-h2: 1.5rem;

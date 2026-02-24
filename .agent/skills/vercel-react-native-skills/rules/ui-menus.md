@@ -14,11 +14,11 @@ Use [zeego](https://zeego.dev) for cross-platform native menus.
 **Incorrect (custom JS menu):**
 
 ```tsx
-import { useState } from 'react'
-import { View, Pressable, Text } from 'react-native'
+import { useState } from 'react';
+import { View, Pressable, Text } from 'react-native';
 
 function MyMenu() {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
 
   return (
     <View>
@@ -36,14 +36,14 @@ function MyMenu() {
         </View>
       )}
     </View>
-  )
+  );
 }
 ```
 
 **Correct (native menu with zeego):**
 
 ```tsx
-import * as DropdownMenu from 'zeego/dropdown-menu'
+import * as DropdownMenu from 'zeego/dropdown-menu';
 
 function MyMenu() {
   return (
@@ -64,14 +64,14 @@ function MyMenu() {
         </DropdownMenu.Item>
       </DropdownMenu.Content>
     </DropdownMenu.Root>
-  )
+  );
 }
 ```
 
 **Context menu (long-press):**
 
 ```tsx
-import * as ContextMenu from 'zeego/context-menu'
+import * as ContextMenu from 'zeego/context-menu';
 
 function MyContextMenu() {
   return (
@@ -92,17 +92,17 @@ function MyContextMenu() {
         </ContextMenu.Item>
       </ContextMenu.Content>
     </ContextMenu.Root>
-  )
+  );
 }
 ```
 
 **Checkbox items:**
 
 ```tsx
-import * as DropdownMenu from 'zeego/dropdown-menu'
+import * as DropdownMenu from 'zeego/dropdown-menu';
 
 function SettingsMenu() {
-  const [notifications, setNotifications] = useState(true)
+  const [notifications, setNotifications] = useState(true);
 
   return (
     <DropdownMenu.Root>
@@ -123,14 +123,14 @@ function SettingsMenu() {
         </DropdownMenu.CheckboxItem>
       </DropdownMenu.Content>
     </DropdownMenu.Root>
-  )
+  );
 }
 ```
 
 **Submenus:**
 
 ```tsx
-import * as DropdownMenu from 'zeego/dropdown-menu'
+import * as DropdownMenu from 'zeego/dropdown-menu';
 
 function MenuWithSubmenu() {
   return (
@@ -163,7 +163,7 @@ function MenuWithSubmenu() {
         </DropdownMenu.Sub>
       </DropdownMenu.Content>
     </DropdownMenu.Root>
-  )
+  );
 }
 ```
 

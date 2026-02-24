@@ -12,21 +12,21 @@
 
 ## ESTADO GENERAL
 
-| Campo                   | Valor                                            |
-| ----------------------- | ------------------------------------------------ |
-| Fase actual             | MVP v1.0                                         |
-| Caja en curso           | **CAJA MVP-02: Infraestructura**                 |
-| Última tarea completada | `02.2.1` — Configurar ESLint 9 con seguridad e import order |
-| Próxima tarea           | `02.2.2` — Configurar Prettier con Tailwind plugin |
-| Bloqueadores            | Ninguno                                          |
-| Fecha inicio proyecto   | 2026-02-21                                       |
-| Último commit           | `38cc5ae` — test(verify)                         |
-| Branch                  | main                                             |
+| Campo                   | Valor                                              |
+| ----------------------- | -------------------------------------------------- |
+| Fase actual             | MVP v1.0                                           |
+| Caja en curso           | **CAJA MVP-02: Infraestructura**                   |
+| Última tarea completada | `02.2.2` — Configurar Prettier con Tailwind plugin |
+| Próxima tarea           | `02.2.3` — Instalar dependencias linting y knip    |
+| Bloqueadores            | Ninguno                                            |
+| Fecha inicio proyecto   | 2026-02-21                                         |
+| Último commit           | `38cc5ae` — test(verify)                           |
+| Branch                  | main                                               |
 
 ## MAPA DE PROGRESO
 
 ```
-CAJA MVP-02: Infraestructura     [▓▓▓▓░░░░░░] 10/96  ← EN CURSO
+CAJA MVP-02: Infraestructura     [▓▓▓▓░░░░░░] 11/96  ← EN CURSO
 CAJA MVP-03: Base de Datos       [░░░░░░░░░░] 0/??
 CAJA MVP-04: Motor Core          [░░░░░░░░░░] 0/??
 CAJA MVP-05: Auth/Onboarding     [░░░░░░░░░░] 0/??
@@ -220,6 +220,17 @@ FORMATO POR TAREA:
 - **Commit**: pendiente (se registra en commit de esta tarea)
 - **Notas**: Adaptación de compatibilidad: `@next/eslint-plugin-next` fijado a `~15.1.12` para evitar conflicto con Next.js 15. Se ajustó `import-x/order` para no romper imports existentes sin tocar `src/`.
 
+### [02.2.2] — Configurar Prettier con Tailwind plugin
+
+- **Estado**: ✅ COMPLETADA
+- **Fecha**: 2026-02-24 01:32
+- **Tipo**: [CONFIG]
+- **Archivos creados/modificados**: `.prettierrc`, `.prettierignore`, `.editorconfig`, `package.json`, `pnpm-lock.yaml` y archivos reformateados por `prettier --write .`
+- **Tests**: N/A (tarea de configuración)
+- **Validación**: `pnpm format:check` exit 0 ✅; `pnpm lint` exit 0 ✅; `pnpm build` exit 0 ✅; `pnpm type-check` exit 0 ✅
+- **Commit**: pendiente (se registra en commit de esta tarea)
+- **Notas**: Se instaló `prettier-plugin-tailwindcss` y se agregaron scripts `format` y `format:check` en `package.json`.
+
 ---
 
 ## ISSUES Y DEUDA TÉCNICA
@@ -251,3 +262,4 @@ FORMATO POR TAREA:
 - 2026-02-23 23:35 — Ejecutada tarea 02.1.8: benchmark Turbopack/webpack y verificación HMR (resultado parcial por HMR >200ms).
 - 2026-02-24 00:07 — Completada tarea 02.1.9: script `pnpm verify` con 10 checks y cleanup automático, commit `38cc5ae`.
 - 2026-02-24 00:58 — Completada tarea 02.2.1: migración a ESLint 9 flat config (`eslint.config.mjs`) con `typescript-eslint`, `eslint-plugin-security` e `import-x`; verificados lint/build/type-check y detección de reglas con archivos temporales.
+- 2026-02-24 01:32 — Completada tarea 02.2.2: configuración de Prettier + plugin Tailwind + EditorConfig; ejecutados `format:check/format/lint/build/type-check`.
