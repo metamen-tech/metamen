@@ -16,8 +16,8 @@
 | ----------------------- | ------------------------------------------------ |
 | Fase actual             | MVP v1.0                                         |
 | Caja en curso           | **CAJA MVP-02: Infraestructura**                 |
-| Última tarea completada | `02.1.9` — Verificar setup completo del proyecto |
-| Próxima tarea           | `02.2.1` — Configurar ESLint 9 con seguridad e import order |
+| Última tarea completada | `02.2.1` — Configurar ESLint 9 con seguridad e import order |
+| Próxima tarea           | `02.2.2` — Configurar Prettier con Tailwind plugin |
 | Bloqueadores            | Ninguno                                          |
 | Fecha inicio proyecto   | 2026-02-21                                       |
 | Último commit           | `38cc5ae` — test(verify)                         |
@@ -26,7 +26,7 @@
 ## MAPA DE PROGRESO
 
 ```
-CAJA MVP-02: Infraestructura     [▓▓▓░░░░░░░] 9/96  ← EN CURSO
+CAJA MVP-02: Infraestructura     [▓▓▓▓░░░░░░] 10/96  ← EN CURSO
 CAJA MVP-03: Base de Datos       [░░░░░░░░░░] 0/??
 CAJA MVP-04: Motor Core          [░░░░░░░░░░] 0/??
 CAJA MVP-05: Auth/Onboarding     [░░░░░░░░░░] 0/??
@@ -209,6 +209,17 @@ FORMATO POR TAREA:
 - **Commit**: `38cc5ae` — test(verify): add setup verification script with 10 comprehensive checks
 - **Notas**: En PowerShell con `bash.exe` apuntando a WSL sin distro, `pnpm verify` requiere priorizar Git Bash en `PATH`.
 
+### [02.2.1] — Configurar ESLint 9 con seguridad e import order
+
+- **Estado**: ✅ COMPLETADA
+- **Fecha**: 2026-02-24 00:58
+- **Tipo**: [CONFIG]
+- **Archivos creados/modificados**: `eslint.config.mjs`, `package.json`, `pnpm-lock.yaml`, `bitacora.md`; eliminado `.eslintrc.json`
+- **Tests**: N/A (tarea de configuración)
+- **Validación**: `pnpm lint` exit 0 ✅; `pnpm build` exit 0 ✅; `pnpm type-check` exit 0 ✅; regla `security/detect-eval-with-expression` detecta `eval()` en archivo temporal ✅; regla `import-x/order` detecta imports desordenados en archivo temporal ✅; limpieza de temporales y restauración de `tsconfig.json` ✅
+- **Commit**: pendiente (se registra en commit de esta tarea)
+- **Notas**: Adaptación de compatibilidad: `@next/eslint-plugin-next` fijado a `~15.1.12` para evitar conflicto con Next.js 15. Se ajustó `import-x/order` para no romper imports existentes sin tocar `src/`.
+
 ---
 
 ## ISSUES Y DEUDA TÉCNICA
@@ -218,6 +229,7 @@ FORMATO POR TAREA:
 - **[DEPENDENCIAS] 3 Subdependencias Transitivas Deprecated**: `glob@10.5.0`, `node-domexception@1.0.0`, `serialize-error-cjs@0.1.4` reportan warnings al instalar. Se confirma mediante `pnpm why` que provienen internamente de las dependencias raíz `@supabase/ssr` e `inngest`. **No accionable:** El override explícito rompe la cadena interna. Se documenta como deuda técnica pasiva a la espera de que los dueños de los paquetes actualicen sus dependencias internas. Efecto nulo en producción o funcionalidad del motor.
 - **[DEV-ENV] Resolución de `bash` en Windows**: En esta máquina, `bash.exe` por defecto apunta al launcher de WSL (`C:\Windows\System32\bash.exe`) y falla si no hay distro Linux configurada (`/bin/bash` no encontrado). **Mitigación**: ejecutar desde Git Bash o priorizar `C:\Program Files\Git\bin` en `PATH` para usar `pnpm verify`.
 - **[PERF-DEV] HMR Turbopack por encima de objetivo**: Se midió HMR en `403ms` (objetivo <200ms) con warning `Slow filesystem detected` sobre `M:\proyectos\metamen_tech`. No bloquea la ejecución, pero afecta experiencia de desarrollo.
+- **[LINT-NEXT] Aviso de detección de plugin Next con flat config**: `next lint` muestra warning no bloqueante (`The Next.js plugin was not detected in your ESLint configuration`) aun con `next/core-web-vitals` cargado mediante `FlatCompat`. Lint/buid/type-check pasan; revisar migración nativa flat config de Next cuando el stack se estabilice.
 
 ---
 
@@ -238,3 +250,4 @@ FORMATO POR TAREA:
 - 2026-02-23 22:45 — Completada tarea 02.1.7: extracción de tokens de color a CSS custom properties, commit `bfa2447`.
 - 2026-02-23 23:35 — Ejecutada tarea 02.1.8: benchmark Turbopack/webpack y verificación HMR (resultado parcial por HMR >200ms).
 - 2026-02-24 00:07 — Completada tarea 02.1.9: script `pnpm verify` con 10 checks y cleanup automático, commit `38cc5ae`.
+- 2026-02-24 00:58 — Completada tarea 02.2.1: migración a ESLint 9 flat config (`eslint.config.mjs`) con `typescript-eslint`, `eslint-plugin-security` e `import-x`; verificados lint/build/type-check y detección de reglas con archivos temporales.
