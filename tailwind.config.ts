@@ -1,14 +1,162 @@
-/** @type {import('tailwindcss').Config} */
-const config = {
+import forms from "@tailwindcss/forms";
+import typography from "@tailwindcss/typography";
+import type { Config } from "tailwindcss";
+import animate from "tailwindcss-animate";
+
+const config: Config = {
   content: [
-    './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/components/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/app/**/*.{js,ts,jsx,tsx,mdx}',
+    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-    extend: {},
+    screens: {
+      sm: "640px",
+      md: "768px",
+      lg: "1024px",
+      xl: "1280px",
+      "2xl": "1536px",
+    },
+    container: {
+      center: true,
+      padding: {
+        DEFAULT: "16px",
+        lg: "24px",
+        xl: "24px",
+        "2xl": "24px",
+      },
+      screens: {
+        "2xl": "1200px",
+      },
+    },
+    extend: {
+      colors: {
+        "bg-base": "#0A0A0A",
+        "bg-card": "#1A1A1A",
+        "bg-elevated": "#2D2D2D",
+        "accent-gold": "#D4AF37",
+        "accent-gold-hover": "#B8941F",
+        "accent-cta": "#FF073A",
+        "accent-cta-hover": "#DC143C",
+        "accent-active": "#00E5FF",
+        "state-error": "#FF0000",
+        "state-success": "#00FF88",
+        "state-warning": "#FFB800",
+        "state-info": "#00E5FF",
+        "text-primary": "#FFFFFF",
+        "text-glow": "#F8FFFF",
+        "text-secondary": "#B0B0B0",
+        "text-disabled": "#808080",
+        "vector-aura": "#9B59B6",
+        "vector-aura-secondary": "#E8D5F2",
+        "vector-jawline": "#E74C3C",
+        "vector-jawline-secondary": "#FADBD8",
+        "vector-wealth": "#27AE60",
+        "vector-wealth-secondary": "#D5F5E3",
+        "vector-physique": "#E67E22",
+        "vector-physique-secondary": "#FDEBD0",
+        "vector-social": "#3498DB",
+        "vector-social-secondary": "#D6EAF8",
+        "vector-env": "#1ABC9C",
+        "vector-env-secondary": "#D1F2EB",
+        "level-low": "#95A5A6",
+        "level-mid": "#8D6E63",
+        "level-high": "#3498DB",
+        "level-elite": "#D4AF37",
+        "level-god": "#9B59B6",
+        "rarity-common": "#95A5A6",
+        "rarity-rare": "#3498DB",
+        "rarity-epic": "#9B59B6",
+        "rarity-legendary": "#D4AF37",
+        "avatar-rastas": "#27AE60",
+        "avatar-guarro": "#E74C3C",
+        "avatar-pecas": "#3498DB",
+        "avatar-greñas": "#E67E22",
+        "avatar-guero": "#9B59B6",
+        "avatar-lic": "#95A5A6",
+      },
+      fontFamily: {
+        sans: ["Inter", "system-ui", "sans-serif"],
+        mono: ["JetBrains Mono", "monospace"],
+      },
+      fontSize: {
+        hero: ["3rem", { lineHeight: "1.1", fontWeight: "800" }],
+        h1: ["2rem", { lineHeight: "1.2", fontWeight: "700" }],
+        h2: ["1.5rem", { lineHeight: "1.3", fontWeight: "600" }],
+        h3: ["1.25rem", { lineHeight: "1.4", fontWeight: "600" }],
+        body: ["1rem", { lineHeight: "1.5", fontWeight: "400" }],
+        small: ["0.875rem", { lineHeight: "1.4", fontWeight: "400" }],
+        xs: ["0.75rem", { lineHeight: "1.3", fontWeight: "500" }],
+      },
+      spacing: {
+        "space-1": "4px",
+        "space-2": "8px",
+        "space-3": "12px",
+        "space-4": "16px",
+        "space-5": "20px",
+        "space-6": "24px",
+        "space-8": "32px",
+        "space-10": "40px",
+        "space-12": "48px",
+        "space-16": "64px",
+      },
+      keyframes: {
+        shimmer: {
+          "0%": { backgroundPosition: "-200% 0" },
+          "100%": { backgroundPosition: "200% 0" },
+        },
+        deathShake: {
+          "0%,100%": { transform: "translateX(0)", filter: "grayscale(100%)" },
+          "25%": { transform: "translateX(-5px)" },
+          "75%": { transform: "translateX(5px)" },
+        },
+        levelUpGlow: {
+          "0%": { boxShadow: "0 0 0 0px rgba(212,175,55,0.4)" },
+          "50%": { boxShadow: "0 0 0 20px rgba(212,175,55,0)" },
+          "100%": { boxShadow: "0 0 0 0px rgba(212,175,55,0)" },
+        },
+        vectorPulse: {
+          "0%": { transform: "scale(1)" },
+          "50%": { transform: "scale(1.05)" },
+          "100%": { transform: "scale(1)" },
+        },
+        btcIncrement: {
+          "0%": { transform: "scale(1)", color: "inherit" },
+          "50%": { transform: "scale(1.2)", color: "#D4AF37" },
+          "100%": { transform: "scale(1)", color: "inherit" },
+        },
+        pageEnter: {
+          from: { opacity: "0", transform: "translateY(20px)" },
+          to: { opacity: "1", transform: "translateY(0)" },
+        },
+        pageExit: {
+          from: { opacity: "1", transform: "translateY(0)" },
+          to: { opacity: "0", transform: "translateY(-20px)" },
+        },
+        streakFire: {
+          "0%,100%": { transform: "scale(1)", filter: "brightness(1)" },
+          "50%": { transform: "scale(1.1)", filter: "brightness(1.3)" },
+        },
+        deathFade: {
+          from: { opacity: "1", filter: "grayscale(0)" },
+          to: { opacity: "0.5", filter: "grayscale(100%)" },
+        },
+      },
+      animation: {
+        "pulse-slow": "pulse 3s cubic-bezier(0.4,0,0.6,1) infinite",
+        shimmer: "shimmer 2s linear infinite",
+        "death-shake": "deathShake 500ms ease-in-out 3",
+        "death-fade": "deathFade 1s ease-out forwards",
+        "level-glow": "levelUpGlow 1s ease-out",
+        "vector-pulse": "vectorPulse 2s ease-in-out infinite",
+        "btc-collect": "btcIncrement 600ms ease-out",
+        "page-enter": "pageEnter 300ms cubic-bezier(0.4,0,0.2,1)",
+        "page-exit": "pageExit 300ms cubic-bezier(0.4,0,0.2,1)",
+        "streak-fire": "streakFire 1.5s ease-in-out infinite",
+      },
+    },
   },
-  plugins: [],
+  plugins: [typography, forms, animate],
 };
 
 export default config;
