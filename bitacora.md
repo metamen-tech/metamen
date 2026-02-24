@@ -272,7 +272,7 @@ FORMATO POR TAREA:
 - **Archivos creados/modificados**: `.husky/pre-commit`, `.husky/pre-push`, `package.json`, `pnpm-lock.yaml`, `bitacora.md`
 - **Tests**: N/A (tarea de hooks y configuración)
 - **Validación**: `.husky/` creado con `pre-commit` y `pre-push` ✅; `pre-commit` ejecuta `pnpm lint-staged` y auto-corrige formato en commit de prueba ✅; `pre-push` ejecuta `pnpm type-check` (opción A, sin bloquear por Vitest aún no operativo) ✅; `pnpm lint` exit 0 ✅; `pnpm build` exit 0 ✅; `pnpm type-check` exit 0 ✅; `pnpm format:check` exit 0 ✅; sin archivos temporales ✅
-- **Commit**: `PENDIENTE` — chore(git): configure Husky pre-commit with lint-staged and pre-push type-check
+- **Commit**: `fbb4173` — chore(git): configure Husky pre-commit with lint-staged and pre-push type-check
 - **Notas**: Se implementó pre-push solo con `pnpm type-check` por fase temprana del bloque (test runner se integrará en tarea posterior).
 
 ---
