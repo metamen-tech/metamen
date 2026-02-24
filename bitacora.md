@@ -16,17 +16,17 @@
 | ----------------------- | ------------------------------------------------ |
 | Fase actual             | MVP v1.0                                         |
 | Caja en curso           | **CAJA MVP-02: Infraestructura**                 |
-| Última tarea completada | `02.1.3` — Configurar package.json completo      |
-| Próxima tarea           | `02.1.4` — Configurar tsconfig.json ultra-strict |
+| Última tarea completada | `02.1.9` — Verificar setup completo del proyecto |
+| Próxima tarea           | `02.2.1` — Configurar ESLint 9 con seguridad e import order |
 | Bloqueadores            | Ninguno                                          |
 | Fecha inicio proyecto   | 2026-02-21                                       |
-| Último commit           | `74f6b6b` — feat(02.1.3)                         |
+| Último commit           | `38cc5ae` — test(verify)                         |
 | Branch                  | main                                             |
 
 ## MAPA DE PROGRESO
 
 ```
-CAJA MVP-02: Infraestructura     [▓░░░░░░░░░] 3/96  ← EN CURSO
+CAJA MVP-02: Infraestructura     [▓▓▓░░░░░░░] 9/96  ← EN CURSO
 CAJA MVP-03: Base de Datos       [░░░░░░░░░░] 0/??
 CAJA MVP-04: Motor Core          [░░░░░░░░░░] 0/??
 CAJA MVP-05: Auth/Onboarding     [░░░░░░░░░░] 0/??
@@ -43,7 +43,7 @@ CAJA MVP-13: Launch              [░░░░░░░░░░] 0/??
 
 | Servicio      | Status         | Notas                                 |
 | ------------- | -------------- | ------------------------------------- |
-| Next.js 15    | ✅ Configurado | Next.js 16.1.6 (cumple >=15.1)        |
+| Next.js 15    | ✅ Configurado | Next.js 15.1.12 (cumple >=15.1)       |
 | Supabase      | ⬜ Pendiente   | Necesita proyecto creado en dashboard |
 | Stripe        | ⬜ Pendiente   | Test mode, 3 precios                  |
 | Gemini API    | ⬜ Pendiente   | Google AI Studio key                  |
@@ -121,27 +121,93 @@ FORMATO POR TAREA:
 - **Commit**: N/A (tarea manual, sin cambios de código)
 - **Notas**: pnpm 10.x es backward-compatible con el requisito >=9.0.0. Corepack disponible.
 
-### [02.1.2] — Inicializar proyecto Next.js 15
+### [02.1.2] — Crear estructura completa de carpetas del proyecto
 
 - **Estado**: ✅ COMPLETADA
-- **Fecha**: 2026-02-22 13:03
-- **Tipo**: [AUTO/SCRIPT]
-- **Archivos creados/modificados**: .gitignore, eslint.config.mjs, next.config.ts, package.json, pnpm-lock.yaml, pnpm-workspace.yaml, postcss.config.mjs, public/, src/, tsconfig.json
-- **Tests**: N/A (tarea de scaffold)
-- **Validación**: `pnpm dev` inicia en `http://localhost:3000`; alias `@/*` activo; lockfile `pnpm-lock.yaml` presente; Next.js 16.1.6 (cumple >=15.1); React 19.2.3 ✅; TypeScript presente ✅
-- **Commit**: `b2409ca` — chore(02-infra): initialize Next.js 15 project with App Router
-- **Notas**: Inicialización en raíz requirió workaround por restricción de nombre npm en `metaMen_Tech` (mayúsculas); se generó temporalmente y se aplicó en raíz preservando documentación.
+- **Fecha**: 2026-02-24 00:10
+- **Tipo**: [CONFIG]
+- **Archivos creados/modificados**: `src/**/.gitkeep`, `supabase/migrations/.gitkeep`, `tests/**/.gitkeep`, `scripts/.gitkeep`, `.vscode/.gitkeep`, `.github/**/.gitkeep`
+- **Tests**: N/A (tarea de estructura)
+- **Validación**: Estructura de carpetas creada según Tech Spec §4; `src/lib/email` ausente ✅; `67` archivos `.gitkeep` creados ✅; sin archivos `.ts/.tsx/.js/.jsx` nuevos ✅
+- **Commit**: `37402f4` — feat(scaffold): create full project folder structure per Tech Spec §4
+- **Notas**: Commit aislado solo para scaffold; cambios preexistentes en `docs/` se mantuvieron fuera del commit.
 
-### [02.1.3] — Configurar package.json completo
+### [02.1.3] — Inicializar proyecto Next.js con dependencias
 
 - **Estado**: ✅ COMPLETADA
-- **Fecha**: 2026-02-22 16:35
-- **Tipo**: [AUTO/SCRIPT]
-- **Archivos creados/modificados**: package.json, pnpm-lock.yaml
+- **Fecha**: 2026-02-24 00:55
+- **Tipo**: [BASH]
+- **Archivos creados/modificados**: `package.json`, `pnpm-lock.yaml`, `tsconfig.json`, `next.config.ts`, `tailwind.config.ts`, `.eslintrc.json`, `eslint.config.mjs`
+- **Tests**: N/A (tarea de inicialización/configuración)
+- **Validación**: `pnpm install` exit 0 ✅; `pnpm dev` levantando en `http://localhost:3000` ✅; `pnpm lint` y `pnpm type-check` sin errores ✅; scripts requeridos 16/16 ✅; versiones `next/react/react-dom` con tilde (`~15.1.0`, `~19.0.0`, `~19.0.0`) ✅; sin dependencias prohibidas (`resend`, `replicate`, `dall-e`, `fal.ai`) ✅
+- **Commit**: `b13d129` — feat(init): initialize Next.js 15 with full dependency set per Constantes §4.1
+- **Notas**: Se eliminó configuración ESLint plana incompatible (`eslint.config.mjs`) y se dejó `.eslintrc.json` para compatibilidad con `next lint`.
+
+### [02.1.4] — Configurar TypeScript ultra-strict con path aliases
+
+- **Estado**: ✅ COMPLETADA
+- **Fecha**: 2026-02-23 20:33
+- **Tipo**: [CONFIG]
+- **Archivos creados/modificados**: `tsconfig.json`, `src/lib/core/vectors/index.ts`, `src/lib/core/levels/index.ts`, `src/lib/core/economy/index.ts`, `src/components/ui/index.ts`, `src/components/vectors/index.ts`, `src/hooks/index.ts`, `src/types/index.ts`
 - **Tests**: N/A (tarea de configuración)
-- **Validación**: `pnpm install` exit 0 ✅; 15/15 scripts presentes ✅; engines estrictos (node>=20, pnpm>=9) ✅; Next.js/React fijados con tilde (~) ✅; pnpm.overrides.sharp ✅; 27 dependencies + 17 devDependencies
-- **Commit**: `5c83aa7` — fix(02.1.3): authorise build scripts via pnpm approve-builds
-- **Notas**: BullMQ incluido per especificación de Caja 02 como backup de Inngest. 3 subdependencias deprecated (glob, node-domexception, serialize-error-cjs) confirmadas como transitivas inalterables de Supabase/Inngest (aceptadas como deuda técnica). Error `ENOENT` del CLI de Supabase resuelto autorizando explícitamente la post-instalación en pnpm v10 (`pnpm approve-builds`).
+- **Validación**: TypeScript en modo ultra-strict configurado; aliases `@/*` y específicos por capa activos; barrels creados según especificación; `pnpm tsc --noEmit` sin errores ✅
+- **Commit**: `7fbc5e0` — chore(ts): configure ultra-strict TypeScript with path aliases and barrel exports
+- **Notas**: Se respetó la regla de capas en `src/lib/core/`.
+
+### [02.1.5] — Configurar Next.js con seguridad CSP completa
+
+- **Estado**: ✅ COMPLETADA
+- **Fecha**: 2026-02-23 20:51
+- **Tipo**: [CONFIG]
+- **Archivos creados/modificados**: `next.config.ts`
+- **Tests**: N/A (tarea de configuración)
+- **Validación**: CSP y security headers endurecidos según spec; `pnpm build` exitoso; headers verificables en runtime (`content-security-policy`, `x-frame-options`, `strict-transport-security`) ✅
+- **Commit**: `10a6667` — feat(security): configure CSP headers and hardened next.config.ts per Security Spec §13
+- **Notas**: Configuración preparada para entorno dev/prod sin exponer orígenes no permitidos.
+
+### [02.1.6] — Configurar Design System completo en Tailwind
+
+- **Estado**: ✅ COMPLETADA
+- **Fecha**: 2026-02-23 21:08
+- **Tipo**: [CONFIG]
+- **Archivos creados/modificados**: `tailwind.config.ts`, `package.json`, `pnpm-lock.yaml`
+- **Tests**: N/A (tarea de configuración)
+- **Validación**: Tokens de color/tipografía/animación del Design System cargados en Tailwind; clases de vectores/raridades/niveles resuelven; `pnpm build` sin errores ✅
+- **Commit**: `f29b240` — feat(design): configure complete Design System tokens in Tailwind per UI/UX Spec §1
+- **Notas**: Plugins de Tailwind (`typography`, `forms`, `tailwindcss-animate`) integrados.
+
+### [02.1.7] — Crear CSS custom properties para design tokens
+
+- **Estado**: ✅ COMPLETADA
+- **Fecha**: 2026-02-23 22:45
+- **Tipo**: [CONFIG]
+- **Archivos creados/modificados**: `src/app/globals.css`, `tailwind.config.ts`
+- **Tests**: N/A (tarea de configuración)
+- **Validación**: Variables CSS en `:root` como single source of truth; `tailwind.config.ts` consume tokens vía `var(--color-...)`; dark mode único tema; `pnpm build` exitoso ✅
+- **Commit**: `bfa2447` — refactor(tokens): extract Design System colors to CSS custom properties as single source of truth
+- **Notas**: Se restauró `tsconfig.json` tras build (modificación automática de Next.js en dev/build).
+
+### [02.1.8] — Verificar Turbopack en desarrollo
+
+- **Estado**: ⚠️ PARCIAL
+- **Fecha**: 2026-02-23 23:35
+- **Tipo**: [TEST]
+- **Archivos creados/modificados**: Ninguno
+- **Tests**: N/A
+- **Validación**: Turbopack activo ✅; cold start Turbopack `3000ms` vs baseline `3700ms` (18.9% más rápido) ✅; HMR observado `403ms` (objetivo `<200ms` no cumplido) ❌; sin incompatibilidades de plugins Tailwind ✅
+- **Commit**: N/A (tarea de verificación, sin cambios de código)
+- **Notas**: Se observó warning de entorno `Slow filesystem detected` en unidad `M:\`, probable impacto en latencia de HMR.
+
+### [02.1.9] — Verificar setup completo del proyecto
+
+- **Estado**: ✅ COMPLETADA
+- **Fecha**: 2026-02-24 00:07
+- **Tipo**: [TEST]
+- **Archivos creados/modificados**: `scripts/verify-setup.sh`, `package.json`
+- **Tests**: `pnpm verify` (10 passed, 0 failed)
+- **Validación**: Script de verificación integral (10 checks) operativo; checks independientes; resumen final X/10; exit code correcto; cleanup de procesos dev y restauración de `tsconfig.json` ✅
+- **Commit**: `38cc5ae` — test(verify): add setup verification script with 10 comprehensive checks
+- **Notas**: En PowerShell con `bash.exe` apuntando a WSL sin distro, `pnpm verify` requiere priorizar Git Bash en `PATH`.
 
 ---
 
@@ -150,6 +216,8 @@ FORMATO POR TAREA:
 <!-- Registrar aquí problemas encontrados que no se resuelven en la tarea actual -->
 
 - **[DEPENDENCIAS] 3 Subdependencias Transitivas Deprecated**: `glob@10.5.0`, `node-domexception@1.0.0`, `serialize-error-cjs@0.1.4` reportan warnings al instalar. Se confirma mediante `pnpm why` que provienen internamente de las dependencias raíz `@supabase/ssr` e `inngest`. **No accionable:** El override explícito rompe la cadena interna. Se documenta como deuda técnica pasiva a la espera de que los dueños de los paquetes actualicen sus dependencias internas. Efecto nulo en producción o funcionalidad del motor.
+- **[DEV-ENV] Resolución de `bash` en Windows**: En esta máquina, `bash.exe` por defecto apunta al launcher de WSL (`C:\Windows\System32\bash.exe`) y falla si no hay distro Linux configurada (`/bin/bash` no encontrado). **Mitigación**: ejecutar desde Git Bash o priorizar `C:\Program Files\Git\bin` en `PATH` para usar `pnpm verify`.
+- **[PERF-DEV] HMR Turbopack por encima de objetivo**: Se midió HMR en `403ms` (objetivo <200ms) con warning `Slow filesystem detected` sobre `M:\proyectos\metamen_tech`. No bloquea la ejecución, pero afecta experiencia de desarrollo.
 
 ---
 
@@ -161,3 +229,12 @@ FORMATO POR TAREA:
 - 2026-02-22 13:03 — Completada tarea 02.1.2 (scaffold Next.js + validación de arranque y estructura).
 - 2026-02-22 16:35 — Completada tarea 02.1.3 (package.json completo: engines, 15 scripts, 27+17 deps).
 - 2026-02-22 20:00 — [FIX] Warning de `supabase.EXE` resuelto autorizando los scripts de construcción de dependencias con `pnpm approve-builds supabase`. Las 3 dependencias deprecated se auditaron y se documentaron como deuda técnica inalterable en la bitácora. Instalación impecable.
+- 2026-02-24 00:10 — Rehecha tarea 02.1.2: estructura completa de carpetas + `.gitkeep` (67 archivos), commit `37402f4`.
+- 2026-02-24 00:55 — Rehecha tarea 02.1.3: inicialización Next.js 15 con dependencias completas, validación `install/dev/lint/type-check`, commit `b13d129`.
+- 2026-02-23 22:25 — Sesión finalizada por solicitud del usuario. Se canceló la implementación en curso y se cerró la sesión sin nuevos cambios de tarea.
+- 2026-02-23 20:33 — Completada tarea 02.1.4: TypeScript ultra-strict + path aliases + barrels, commit `7fbc5e0`.
+- 2026-02-23 20:51 — Completada tarea 02.1.5: hardening de seguridad y CSP en Next.js, commit `10a6667`.
+- 2026-02-23 21:08 — Completada tarea 02.1.6: Design System completo en Tailwind, commit `f29b240`.
+- 2026-02-23 22:45 — Completada tarea 02.1.7: extracción de tokens de color a CSS custom properties, commit `bfa2447`.
+- 2026-02-23 23:35 — Ejecutada tarea 02.1.8: benchmark Turbopack/webpack y verificación HMR (resultado parcial por HMR >200ms).
+- 2026-02-24 00:07 — Completada tarea 02.1.9: script `pnpm verify` con 10 checks y cleanup automático, commit `38cc5ae`.
