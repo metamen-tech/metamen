@@ -16,17 +16,17 @@
 | ----------------------- | -------------------------------------------------------- |
 | Fase actual             | MVP v1.0                                                 |
 | Caja en curso           | **CAJA MVP-02: Infraestructura**                         |
-| Última tarea completada | `02.3.1` — Configurar Husky con pre-commit y pre-push    |
-| Próxima tarea           | `02.3.2` — Configurar commitlint con scopes del proyecto |
+| Última tarea completada | `02.4.1` — Workflow CI principal con unit tests          |
+| Próxima tarea           | `02.4.2` — Integration tests con Supabase local          |
 | Bloqueadores            | Ninguno                                                  |
 | Fecha inicio proyecto   | 2026-02-21                                               |
-| Último commit           | `cf8b30f` — docs(lint)                                   |
+| Último commit           | `42dc2f8` — ci(config)                                   |
 | Branch                  | main                                                     |
 
 ## MAPA DE PROGRESO
 
 ```
-CAJA MVP-02: Infraestructura     [▓▓▓▓▓▓░░░░] 14/96  ← EN CURSO
+CAJA MVP-02: Infraestructura     [▓▓▓▓▓▓▓░░░] 17/96  ← EN CURSO
 CAJA MVP-03: Base de Datos       [░░░░░░░░░░] 0/??
 CAJA MVP-04: Motor Core          [░░░░░░░░░░] 0/??
 CAJA MVP-05: Auth/Onboarding     [░░░░░░░░░░] 0/??
@@ -275,6 +275,39 @@ FORMATO POR TAREA:
 - **Commit**: `fbb4173` — chore(git): configure Husky pre-commit with lint-staged and pre-push type-check
 - **Notas**: Se implementó pre-push solo con `pnpm type-check` por fase temprana del bloque (test runner se integrará en tarea posterior).
 
+### [02.3.2] — Configurar commitlint con scopes del proyecto
+
+- **Estado**: ✅ COMPLETADA
+- **Fecha**: 2026-02-24 08:50
+- **Tipo**: [CONFIG]
+- **Archivos creados/modificados**: `commitlint.config.js`, `.husky/commit-msg`, `package.json`, `pnpm-lock.yaml`
+- **Tests**: N/A (tarea de tooling)
+- **Validación**: `echo "feat(auth): add login page" | npx commitlint` exit 0 ✅; `echo "fix: correct typo" | npx commitlint` warning scope-empty + exit 0 ✅; `echo "invalid commit message" | npx commitlint` exit 1 ✅; `echo "feat(nonexistent): bad scope" | npx commitlint` exit 1 ✅; hook real `git commit -m "bad message"` rechazado y commit válido aceptado ✅; `pnpm lint`/`pnpm build`/`pnpm type-check` exit 0 ✅
+- **Commit**: `4e8d98d` — chore(git): configure commitlint with project-aligned scopes
+- **Notas**: Se mantuvieron intactos `.husky/pre-commit` y `.husky/pre-push`.
+
+### [02.3.3] — Documentar convenciones Git y branch protection
+
+- **Estado**: ✅ COMPLETADA
+- **Fecha**: 2026-02-24 08:57
+- **Tipo**: [CONFIG]
+- **Archivos creados/modificados**: `.github/BRANCH_NAMING.md`
+- **Tests**: N/A (tarea de documentación/infra)
+- **Validación**: Documento creado con formato de ramas + tabla de types + reglas de protección ✅; rama `develop` creada desde `main` y publicada en `origin` ✅; branch protection aplicada por `gh api` en `main` (`lint`,`type-check`,`build`, 1 aprobación) y `develop` (`lint`,`type-check`, 1 aprobación) ✅; `pnpm lint`/`pnpm build`/`pnpm type-check` exit 0 ✅
+- **Commit**: `dcf682a` — docs(git): add branch naming conventions and protection rules
+- **Notas**: En Caja 02 se siguió usando push directo a `main` con bypass de admin para continuidad operativa.
+
+### [02.4.1] — Workflow CI principal con unit tests
+
+- **Estado**: ✅ COMPLETADA
+- **Fecha**: 2026-02-24 09:51
+- **Tipo**: [CONFIG]
+- **Archivos creados/modificados**: `.github/workflows/ci.yml`, `vitest.config.ts`, `tests/setup.ts`, `src/lib/core/__tests__/placeholder.test.ts`, `.husky/pre-push`, `package.json`, `pnpm-lock.yaml`
+- **Tests**: `pnpm test --run` (2 passed, 0 failed); `pnpm test:coverage` (2 passed, 0 failed)
+- **Validación**: Local: `pnpm test --run` exit 0 ✅; `pnpm test:coverage` exit 0 ✅; `pnpm lint` exit 0 ✅; `pnpm type-check` exit 0 ✅; `pnpm build` exit 0 ✅; hook `pre-push` ejecuta `pnpm type-check && pnpm test --run` ✅. Remoto: workflow `CI` run `22358578811` exitoso con jobs `lint`, `type-check`, `unit-test (shard 1/2)`, `unit-test (shard 2/2)`, `build` ✅
+- **Commit**: `42dc2f8` — ci(config): add github actions ci workflow with vitest and sharded unit tests
+- **Notas**: Se fijó stack de testing compatible con Node `v20.18.0` usando Vitest 2.x y jsdom 25.x.
+
 ---
 
 ## ISSUES Y DEUDA TÉCNICA
@@ -285,6 +318,7 @@ FORMATO POR TAREA:
 - **[DEV-ENV] Resolución de `bash` en Windows**: En esta máquina, `bash.exe` por defecto apunta al launcher de WSL (`C:\Windows\System32\bash.exe`) y falla si no hay distro Linux configurada (`/bin/bash` no encontrado). **Mitigación**: ejecutar desde Git Bash o priorizar `C:\Program Files\Git\bin` en `PATH` para usar `pnpm verify`.
 - **[PERF-DEV] HMR Turbopack por encima de objetivo**: Se midió HMR en `403ms` (objetivo <200ms) con warning `Slow filesystem detected` sobre `M:\proyectos\metamen_tech`. No bloquea la ejecución, pero afecta experiencia de desarrollo.
 - **[LINT-NEXT][RESUELTO 2026-02-24]**: Se eliminó `*.config.mjs`/`*.config.js` de `ignores` en `eslint.config.mjs`; `next lint` vuelve a detectar correctamente el plugin `@next/next`.
+- **[VITEST][WARN] CJS API de Vite deprecada**: Vitest 2.x muestra warning `The CJS build of Vite's Node API is deprecated` durante runs locales. **No bloqueante**: tests y CI pasan; seguimiento para migrar a stack ESM completo en iteración futura.
 
 ---
 
@@ -312,3 +346,6 @@ FORMATO POR TAREA:
 - 2026-02-24 02:22 — Completada tarea 02.2.4: verificación integral del pipeline (`lint`, `prettier`, `security`, `import order`, `knip`) y creación de `docs/LINTING.md`.
 - 2026-02-24 02:30 — Sesión finalizada por solicitud del usuario. Estado y bitácora actualizados hasta este punto.
 - 2026-02-24 08:20 — Completada tarea 02.3.1: Husky + lint-staged (`pre-commit`) y `pre-push` con `type-check`; validado auto-fix en commit de prueba y limpieza de temporales.
+- 2026-02-24 08:50 — Completada tarea 02.3.2: commitlint + hook `commit-msg` con scopes del proyecto y validación de mensajes válidos/inválidos.
+- 2026-02-24 08:57 — Completada tarea 02.3.3: documentación de branching + creación de `develop` + branch protection en `main/develop` por `gh api`.
+- 2026-02-24 09:51 — Completada tarea 02.4.1: Vitest 2.x + workflow CI con sharding (2 shards) y ejecución exitosa en GitHub Actions (run `22358578811`).
