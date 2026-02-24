@@ -12,21 +12,21 @@
 
 ## ESTADO GENERAL
 
-| Campo                   | Valor                                                 |
-| ----------------------- | ----------------------------------------------------- |
-| Fase actual             | MVP v1.0                                              |
-| Caja en curso           | **CAJA MVP-02: Infraestructura**                      |
-| Última tarea completada | `02.2.4` — Verificar pipeline linting completo        |
-| Próxima tarea           | `02.3.1` — Configurar Husky con pre-commit y pre-push |
-| Bloqueadores            | Ninguno                                               |
-| Fecha inicio proyecto   | 2026-02-21                                            |
-| Último commit           | `38cc5ae` — test(verify)                              |
-| Branch                  | main                                                  |
+| Campo                   | Valor                                                    |
+| ----------------------- | -------------------------------------------------------- |
+| Fase actual             | MVP v1.0                                                 |
+| Caja en curso           | **CAJA MVP-02: Infraestructura**                         |
+| Última tarea completada | `02.3.1` — Configurar Husky con pre-commit y pre-push    |
+| Próxima tarea           | `02.3.2` — Configurar commitlint con scopes del proyecto |
+| Bloqueadores            | Ninguno                                                  |
+| Fecha inicio proyecto   | 2026-02-21                                               |
+| Último commit           | `cf8b30f` — docs(lint)                                   |
+| Branch                  | main                                                     |
 
 ## MAPA DE PROGRESO
 
 ```
-CAJA MVP-02: Infraestructura     [▓▓▓▓▓░░░░░] 13/96  ← EN CURSO
+CAJA MVP-02: Infraestructura     [▓▓▓▓▓▓░░░░] 14/96  ← EN CURSO
 CAJA MVP-03: Base de Datos       [░░░░░░░░░░] 0/??
 CAJA MVP-04: Motor Core          [░░░░░░░░░░] 0/??
 CAJA MVP-05: Auth/Onboarding     [░░░░░░░░░░] 0/??
@@ -217,7 +217,7 @@ FORMATO POR TAREA:
 - **Archivos creados/modificados**: `eslint.config.mjs`, `package.json`, `pnpm-lock.yaml`, `bitacora.md`; eliminado `.eslintrc.json`
 - **Tests**: N/A (tarea de configuración)
 - **Validación**: `pnpm lint` exit 0 ✅; `pnpm build` exit 0 ✅; `pnpm type-check` exit 0 ✅; regla `security/detect-eval-with-expression` detecta `eval()` en archivo temporal ✅; regla `import-x/order` detecta imports desordenados en archivo temporal ✅; limpieza de temporales y restauración de `tsconfig.json` ✅
-- **Commit**: pendiente (se registra en commit de esta tarea)
+- **Commit**: `ef911d2` — feat(lint): configure ESLint 9 flat config with security and import ordering
 - **Notas**: Adaptación de compatibilidad: `@next/eslint-plugin-next` fijado a `~15.1.12` para evitar conflicto con Next.js 15. Se ajustó `import-x/order` para no romper imports existentes sin tocar `src/`.
 
 ### [02.2.2] — Configurar Prettier con Tailwind plugin
@@ -228,7 +228,7 @@ FORMATO POR TAREA:
 - **Archivos creados/modificados**: `.prettierrc`, `.prettierignore`, `.editorconfig`, `package.json`, `pnpm-lock.yaml` y archivos reformateados por `prettier --write .`
 - **Tests**: N/A (tarea de configuración)
 - **Validación**: `pnpm format:check` exit 0 ✅; `pnpm lint` exit 0 ✅; `pnpm build` exit 0 ✅; `pnpm type-check` exit 0 ✅
-- **Commit**: pendiente (se registra en commit de esta tarea)
+- **Commit**: `dc4023a` — chore(format): configure Prettier with Tailwind plugin and EditorConfig
 - **Notas**: Se instaló `prettier-plugin-tailwindcss` y se agregaron scripts `format` y `format:check` en `package.json`.
 
 ### [02.2.1-HF1] — Fix warning de detección del plugin Next en ESLint flat config
@@ -239,7 +239,7 @@ FORMATO POR TAREA:
 - **Archivos creados/modificados**: `eslint.config.mjs`, `bitacora.md`
 - **Tests**: N/A (ajuste de configuración)
 - **Validación**: `pnpm lint` exit 0 ✅ y sin warning `The Next.js plugin was not detected...`
-- **Commit**: pendiente (se registra en commit de esta tarea)
+- **Commit**: `c3de3dc` — fix(02.2.1): remove eslint config ignores for next plugin detection
 - **Notas**: Se removieron `*.config.mjs` y `*.config.js` del bloque `ignores` para que `next lint` pueda detectar `@next/next` al resolver la config.
 
 ### [02.2.3] — Instalar dependencias linting y knip
@@ -250,7 +250,7 @@ FORMATO POR TAREA:
 - **Archivos creados/modificados**: `knip.config.ts`, `eslint.config.mjs`, `package.json`, `pnpm-lock.yaml`, `bitacora.md`
 - **Tests**: N/A (tarea de tooling)
 - **Validación**: `pnpm ls --dev --depth=0` confirma deps requeridas ✅; `pnpm knip` ejecuta (reporta findings esperados, sin crash) ✅; `pnpm knip` detecta `src/test-dead-code-temp.ts` ✅; `pnpm lint` exit 0 ✅; `pnpm build` exit 0 ✅; `pnpm type-check` exit 0 ✅; `pnpm format:check` exit 0 ✅; limpieza de temporales ✅
-- **Commit**: pendiente (se registra en commit de esta tarea)
+- **Commit**: `8ad17ca` — chore(dx): add eslint-config-prettier bridge and knip dead code detector
 - **Notas**: `eslint-config-prettier` ya estaba instalado; se agregó únicamente `knip`. Se integró `eslint-config-prettier` como último config efectivo antes de `ignores`.
 
 ### [02.2.4] — Verificar pipeline linting completo
@@ -261,8 +261,19 @@ FORMATO POR TAREA:
 - **Archivos creados/modificados**: `docs/LINTING.md`, `bitacora.md`
 - **Tests**: N/A (verificación de tooling)
 - **Validación**: CHECK 1 `pnpm lint` exit 0 ✅; CHECK 2 `pnpm format:check` exit 0 ✅; CHECK 3 security plugin detecta `eval` + `object injection` en archivo temporal ✅; CHECK 4 `import-x/order` detecta imports desordenados ✅; CHECK 5 `pnpm knip` ejecuta sin crash y findings esperados sin falsos positivos críticos ✅; limpieza de temporales ✅; `pnpm build` exit 0 ✅; `pnpm type-check` exit 0 ✅
-- **Commit**: pendiente (se registra en commit de esta tarea)
+- **Commit**: `cf8b30f` — docs(lint): add linting pipeline verification and troubleshooting guide
 - **Notas**: Se creó guía de troubleshooting en `docs/LINTING.md`. `pnpm format:check` requiere mantener `tsconfig.json` formateado durante la verificación y luego restaurarlo para no persistir cambios fuera de alcance.
+
+### [02.3.1] — Configurar Husky con pre-commit y pre-push
+
+- **Estado**: ✅ COMPLETADA
+- **Fecha**: 2026-02-24 08:20
+- **Tipo**: [SETUP]
+- **Archivos creados/modificados**: `.husky/pre-commit`, `.husky/pre-push`, `package.json`, `pnpm-lock.yaml`, `bitacora.md`
+- **Tests**: N/A (tarea de hooks y configuración)
+- **Validación**: `.husky/` creado con `pre-commit` y `pre-push` ✅; `pre-commit` ejecuta `pnpm lint-staged` y auto-corrige formato en commit de prueba ✅; `pre-push` ejecuta `pnpm type-check` (opción A, sin bloquear por Vitest aún no operativo) ✅; `pnpm lint` exit 0 ✅; `pnpm build` exit 0 ✅; `pnpm type-check` exit 0 ✅; `pnpm format:check` exit 0 ✅; sin archivos temporales ✅
+- **Commit**: `PENDIENTE` — chore(git): configure Husky pre-commit with lint-staged and pre-push type-check
+- **Notas**: Se implementó pre-push solo con `pnpm type-check` por fase temprana del bloque (test runner se integrará en tarea posterior).
 
 ---
 
@@ -299,3 +310,5 @@ FORMATO POR TAREA:
 - 2026-02-24 01:47 — Hotfix 02.2.1-HF1: removidos ignores `*.config.mjs`/`*.config.js` en ESLint flat config para eliminar warning de detección del plugin Next.
 - 2026-02-24 02:04 — Completada tarea 02.2.3: agregado `knip`, script `pnpm knip`, `knip.config.ts` y bridge final `eslint-config-prettier` en ESLint.
 - 2026-02-24 02:22 — Completada tarea 02.2.4: verificación integral del pipeline (`lint`, `prettier`, `security`, `import order`, `knip`) y creación de `docs/LINTING.md`.
+- 2026-02-24 02:30 — Sesión finalizada por solicitud del usuario. Estado y bitácora actualizados hasta este punto.
+- 2026-02-24 08:20 — Completada tarea 02.3.1: Husky + lint-staged (`pre-commit`) y `pre-push` con `type-check`; validado auto-fix en commit de prueba y limpieza de temporales.
