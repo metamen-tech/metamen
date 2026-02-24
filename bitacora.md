@@ -12,21 +12,21 @@
 
 ## ESTADO GENERAL
 
-| Campo                   | Valor                                           |
-| ----------------------- | ----------------------------------------------- |
-| Fase actual             | MVP v1.0                                        |
-| Caja en curso           | **CAJA MVP-02: Infraestructura**                |
-| Última tarea completada | `02.2.3` — Instalar dependencias linting y knip |
-| Próxima tarea           | `02.2.4` — Verificar pipeline linting completo  |
-| Bloqueadores            | Ninguno                                         |
-| Fecha inicio proyecto   | 2026-02-21                                      |
-| Último commit           | `38cc5ae` — test(verify)                        |
-| Branch                  | main                                            |
+| Campo                   | Valor                                                 |
+| ----------------------- | ----------------------------------------------------- |
+| Fase actual             | MVP v1.0                                              |
+| Caja en curso           | **CAJA MVP-02: Infraestructura**                      |
+| Última tarea completada | `02.2.4` — Verificar pipeline linting completo        |
+| Próxima tarea           | `02.3.1` — Configurar Husky con pre-commit y pre-push |
+| Bloqueadores            | Ninguno                                               |
+| Fecha inicio proyecto   | 2026-02-21                                            |
+| Último commit           | `38cc5ae` — test(verify)                              |
+| Branch                  | main                                                  |
 
 ## MAPA DE PROGRESO
 
 ```
-CAJA MVP-02: Infraestructura     [▓▓▓▓▓░░░░░] 12/96  ← EN CURSO
+CAJA MVP-02: Infraestructura     [▓▓▓▓▓░░░░░] 13/96  ← EN CURSO
 CAJA MVP-03: Base de Datos       [░░░░░░░░░░] 0/??
 CAJA MVP-04: Motor Core          [░░░░░░░░░░] 0/??
 CAJA MVP-05: Auth/Onboarding     [░░░░░░░░░░] 0/??
@@ -253,6 +253,17 @@ FORMATO POR TAREA:
 - **Commit**: pendiente (se registra en commit de esta tarea)
 - **Notas**: `eslint-config-prettier` ya estaba instalado; se agregó únicamente `knip`. Se integró `eslint-config-prettier` como último config efectivo antes de `ignores`.
 
+### [02.2.4] — Verificar pipeline linting completo
+
+- **Estado**: ✅ COMPLETADA
+- **Fecha**: 2026-02-24 02:22
+- **Tipo**: [TEST]
+- **Archivos creados/modificados**: `docs/LINTING.md`, `bitacora.md`
+- **Tests**: N/A (verificación de tooling)
+- **Validación**: CHECK 1 `pnpm lint` exit 0 ✅; CHECK 2 `pnpm format:check` exit 0 ✅; CHECK 3 security plugin detecta `eval` + `object injection` en archivo temporal ✅; CHECK 4 `import-x/order` detecta imports desordenados ✅; CHECK 5 `pnpm knip` ejecuta sin crash y findings esperados sin falsos positivos críticos ✅; limpieza de temporales ✅; `pnpm build` exit 0 ✅; `pnpm type-check` exit 0 ✅
+- **Commit**: pendiente (se registra en commit de esta tarea)
+- **Notas**: Se creó guía de troubleshooting en `docs/LINTING.md`. `pnpm format:check` requiere mantener `tsconfig.json` formateado durante la verificación y luego restaurarlo para no persistir cambios fuera de alcance.
+
 ---
 
 ## ISSUES Y DEUDA TÉCNICA
@@ -287,3 +298,4 @@ FORMATO POR TAREA:
 - 2026-02-24 01:32 — Completada tarea 02.2.2: configuración de Prettier + plugin Tailwind + EditorConfig; ejecutados `format:check/format/lint/build/type-check`.
 - 2026-02-24 01:47 — Hotfix 02.2.1-HF1: removidos ignores `*.config.mjs`/`*.config.js` en ESLint flat config para eliminar warning de detección del plugin Next.
 - 2026-02-24 02:04 — Completada tarea 02.2.3: agregado `knip`, script `pnpm knip`, `knip.config.ts` y bridge final `eslint-config-prettier` en ESLint.
+- 2026-02-24 02:22 — Completada tarea 02.2.4: verificación integral del pipeline (`lint`, `prettier`, `security`, `import order`, `knip`) y creación de `docs/LINTING.md`.
