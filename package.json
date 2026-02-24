@@ -21,7 +21,7 @@
     "db:reset": "supabase db reset",
     "analyze": "ANALYZE=true next build",
     "clean": "rm -rf .next node_modules",
-    "verify": "pnpm type-check && pnpm lint && pnpm test",
+    "verify": "bash scripts/verify-setup.sh",
     "inngest:dev": "inngest-cli dev"
   },
   "dependencies": {
