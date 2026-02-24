@@ -12,21 +12,21 @@
 
 ## ESTADO GENERAL
 
-| Campo                   | Valor                                                    |
-| ----------------------- | -------------------------------------------------------- |
-| Fase actual             | MVP v1.0                                                 |
-| Caja en curso           | **CAJA MVP-02: Infraestructura**                         |
-| Última tarea completada | `02.4.1` — Workflow CI principal con unit tests          |
-| Próxima tarea           | `02.4.2` — Integration tests con Supabase local          |
-| Bloqueadores            | Ninguno                                                  |
-| Fecha inicio proyecto   | 2026-02-21                                               |
-| Último commit           | `42dc2f8` — ci(config)                                   |
-| Branch                  | main                                                     |
+| Campo                   | Valor                                           |
+| ----------------------- | ----------------------------------------------- |
+| Fase actual             | MVP v1.0                                        |
+| Caja en curso           | **CAJA MVP-02: Infraestructura**                |
+| Última tarea completada | `02.4.2` — Integration tests con Supabase local |
+| Próxima tarea           | `02.4.3` — Pendiente definición                 |
+| Bloqueadores            | Ninguno                                         |
+| Fecha inicio proyecto   | 2026-02-21                                      |
+| Último commit           | Pendiente — commit de tarea 02.4.2              |
+| Branch                  | main                                            |
 
 ## MAPA DE PROGRESO
 
 ```
-CAJA MVP-02: Infraestructura     [▓▓▓▓▓▓▓░░░] 17/96  ← EN CURSO
+CAJA MVP-02: Infraestructura     [▓▓▓▓▓▓▓▓░░] 18/96  ← EN CURSO
 CAJA MVP-03: Base de Datos       [░░░░░░░░░░] 0/??
 CAJA MVP-04: Motor Core          [░░░░░░░░░░] 0/??
 CAJA MVP-05: Auth/Onboarding     [░░░░░░░░░░] 0/??
@@ -44,7 +44,7 @@ CAJA MVP-13: Launch              [░░░░░░░░░░] 0/??
 | Servicio      | Status         | Notas                                 |
 | ------------- | -------------- | ------------------------------------- |
 | Next.js 15    | ✅ Configurado | Next.js 15.1.12 (cumple >=15.1)       |
-| Supabase      | ⬜ Pendiente   | Necesita proyecto creado en dashboard |
+| Supabase      | ✅ Local       | CLI instalado, 6 migraciones, seed OK |
 | Stripe        | ⬜ Pendiente   | Test mode, 3 precios                  |
 | Gemini API    | ⬜ Pendiente   | Google AI Studio key                  |
 | Resend        | ⬜ Pendiente   | Dominio por verificar                 |
@@ -308,6 +308,17 @@ FORMATO POR TAREA:
 - **Commit**: `42dc2f8` — ci(config): add github actions ci workflow with vitest and sharded unit tests
 - **Notas**: Se fijó stack de testing compatible con Node `v20.18.0` usando Vitest 2.x y jsdom 25.x.
 
+### [02.4.2] — Integration tests con Supabase local
+
+- **Estado**: ✅ COMPLETADA
+- **Fecha**: 2026-02-24 17:07
+- **Tipo**: [TEST/INFRA]
+- **Archivos creados/modificados**: `supabase/migrations/20260224000001_initial_enums.sql`, `20260224000002_utility_functions.sql`, `20260224000003_tables.sql`, `20260224000004_game_functions.sql`, `20260224000005_task_config.sql`, `20260224000006_transaction_functions.sql`, `supabase/seed.sql`, `tests/integration/setup.ts`, `tests/integration/complete-task.test.ts`, `tests/integration/judgement-night.test.ts`, `tests/integration/overall-score.test.ts`, `.github/workflows/integration.yml`, `vitest.integration.config.ts`, `package.json`
+- **Tests**: `pnpm test:integration` (24 passed, 0 failed); `pnpm test --run` (2 passed, 0 failed)
+- **Validación**: `supabase start` 13 servicios healthy ✅; `supabase db reset` 6 migraciones + seed sin errores ✅; `pnpm test:integration` 24/24 ✅; `pnpm test --run` 2/2 ✅; `pnpm lint` exit 0 ✅; `pnpm type-check` exit 0 ✅; `pnpm build` exit 0 (111kB First Load) ✅
+- **Commit**: Pendiente autorización del usuario
+- **Notas**: Se corrigió bug de cast `VARCHAR(20) → TEXT` en `fn_complete_task_transaction` (línea 116 de migración 006). Storage container falló health check en primer arranque post-reinicio (resuelto con stop/start limpio). Warning de Analytics en Windows (no bloqueante).
+
 ---
 
 ## ISSUES Y DEUDA TÉCNICA
@@ -319,6 +330,7 @@ FORMATO POR TAREA:
 - **[PERF-DEV] HMR Turbopack por encima de objetivo**: Se midió HMR en `403ms` (objetivo <200ms) con warning `Slow filesystem detected` sobre `M:\proyectos\metamen_tech`. No bloquea la ejecución, pero afecta experiencia de desarrollo.
 - **[LINT-NEXT][RESUELTO 2026-02-24]**: Se eliminó `*.config.mjs`/`*.config.js` de `ignores` en `eslint.config.mjs`; `next lint` vuelve a detectar correctamente el plugin `@next/next`.
 - **[VITEST][WARN] CJS API de Vite deprecada**: Vitest 2.x muestra warning `The CJS build of Vite's Node API is deprecated` durante runs locales. **No bloqueante**: tests y CI pasan; seguimiento para migrar a stack ESM completo en iteración futura.
+- **[SUPABASE-WIN] Warning de Analytics en Windows**: `supabase start` muestra `Analytics on Windows requires Docker daemon exposed on tcp://localhost:2375`. **No bloqueante**: todos los servicios arrancan y health checks pasan sin exponer el daemon. Solo afecta al servicio de analytics local.
 
 ---
 
@@ -349,3 +361,4 @@ FORMATO POR TAREA:
 - 2026-02-24 08:50 — Completada tarea 02.3.2: commitlint + hook `commit-msg` con scopes del proyecto y validación de mensajes válidos/inválidos.
 - 2026-02-24 08:57 — Completada tarea 02.3.3: documentación de branching + creación de `develop` + branch protection en `main/develop` por `gh api`.
 - 2026-02-24 09:51 — Completada tarea 02.4.1: Vitest 2.x + workflow CI con sharding (2 shards) y ejecución exitosa en GitHub Actions (run `22358578811`).
+- 2026-02-24 17:07 — Completada tarea 02.4.2: Supabase CLI + 6 migraciones SQL (ENUMs, funciones, tablas, motor de juego, transacciones) + seed.sql + 3 test files (24 tests) + CI workflow `integration.yml` + `vitest.integration.config.ts`. Corregido bug de cast VARCHAR→TEXT en fn_complete_task_transaction. Validación completa: 24/24 integration tests, lint/type-check/build OK.
