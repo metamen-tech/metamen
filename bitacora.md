@@ -12,16 +12,16 @@
 
 ## ESTADO GENERAL
 
-| Campo                   | Valor                                              |
-| ----------------------- | -------------------------------------------------- |
-| Fase actual             | MVP v1.0                                           |
-| Caja en curso           | **CAJA MVP-02: Infraestructura**                   |
-| Última tarea completada | `02.2.2` — Configurar Prettier con Tailwind plugin |
-| Próxima tarea           | `02.2.3` — Instalar dependencias linting y knip    |
-| Bloqueadores            | Ninguno                                            |
-| Fecha inicio proyecto   | 2026-02-21                                         |
-| Último commit           | `38cc5ae` — test(verify)                           |
-| Branch                  | main                                               |
+| Campo                   | Valor                                                                         |
+| ----------------------- | ----------------------------------------------------------------------------- |
+| Fase actual             | MVP v1.0                                                                      |
+| Caja en curso           | **CAJA MVP-02: Infraestructura**                                              |
+| Última tarea completada | `02.2.1-HF1` — Fix warning de detección del plugin Next en ESLint flat config |
+| Próxima tarea           | `02.2.3` — Instalar dependencias linting y knip                               |
+| Bloqueadores            | Ninguno                                                                       |
+| Fecha inicio proyecto   | 2026-02-21                                                                    |
+| Último commit           | `38cc5ae` — test(verify)                                                      |
+| Branch                  | main                                                                          |
 
 ## MAPA DE PROGRESO
 
@@ -231,6 +231,17 @@ FORMATO POR TAREA:
 - **Commit**: pendiente (se registra en commit de esta tarea)
 - **Notas**: Se instaló `prettier-plugin-tailwindcss` y se agregaron scripts `format` y `format:check` en `package.json`.
 
+### [02.2.1-HF1] — Fix warning de detección del plugin Next en ESLint flat config
+
+- **Estado**: ✅ COMPLETADA
+- **Fecha**: 2026-02-24 01:47
+- **Tipo**: [CONFIG]
+- **Archivos creados/modificados**: `eslint.config.mjs`, `bitacora.md`
+- **Tests**: N/A (ajuste de configuración)
+- **Validación**: `pnpm lint` exit 0 ✅ y sin warning `The Next.js plugin was not detected...`
+- **Commit**: pendiente (se registra en commit de esta tarea)
+- **Notas**: Se removieron `*.config.mjs` y `*.config.js` del bloque `ignores` para que `next lint` pueda detectar `@next/next` al resolver la config.
+
 ---
 
 ## ISSUES Y DEUDA TÉCNICA
@@ -240,7 +251,7 @@ FORMATO POR TAREA:
 - **[DEPENDENCIAS] 3 Subdependencias Transitivas Deprecated**: `glob@10.5.0`, `node-domexception@1.0.0`, `serialize-error-cjs@0.1.4` reportan warnings al instalar. Se confirma mediante `pnpm why` que provienen internamente de las dependencias raíz `@supabase/ssr` e `inngest`. **No accionable:** El override explícito rompe la cadena interna. Se documenta como deuda técnica pasiva a la espera de que los dueños de los paquetes actualicen sus dependencias internas. Efecto nulo en producción o funcionalidad del motor.
 - **[DEV-ENV] Resolución de `bash` en Windows**: En esta máquina, `bash.exe` por defecto apunta al launcher de WSL (`C:\Windows\System32\bash.exe`) y falla si no hay distro Linux configurada (`/bin/bash` no encontrado). **Mitigación**: ejecutar desde Git Bash o priorizar `C:\Program Files\Git\bin` en `PATH` para usar `pnpm verify`.
 - **[PERF-DEV] HMR Turbopack por encima de objetivo**: Se midió HMR en `403ms` (objetivo <200ms) con warning `Slow filesystem detected` sobre `M:\proyectos\metamen_tech`. No bloquea la ejecución, pero afecta experiencia de desarrollo.
-- **[LINT-NEXT] Aviso de detección de plugin Next con flat config**: `next lint` muestra warning no bloqueante (`The Next.js plugin was not detected in your ESLint configuration`) aun con `next/core-web-vitals` cargado mediante `FlatCompat`. Lint/buid/type-check pasan; revisar migración nativa flat config de Next cuando el stack se estabilice.
+- **[LINT-NEXT][RESUELTO 2026-02-24]**: Se eliminó `*.config.mjs`/`*.config.js` de `ignores` en `eslint.config.mjs`; `next lint` vuelve a detectar correctamente el plugin `@next/next`.
 
 ---
 
@@ -263,3 +274,4 @@ FORMATO POR TAREA:
 - 2026-02-24 00:07 — Completada tarea 02.1.9: script `pnpm verify` con 10 checks y cleanup automático, commit `38cc5ae`.
 - 2026-02-24 00:58 — Completada tarea 02.2.1: migración a ESLint 9 flat config (`eslint.config.mjs`) con `typescript-eslint`, `eslint-plugin-security` e `import-x`; verificados lint/build/type-check y detección de reglas con archivos temporales.
 - 2026-02-24 01:32 — Completada tarea 02.2.2: configuración de Prettier + plugin Tailwind + EditorConfig; ejecutados `format:check/format/lint/build/type-check`.
+- 2026-02-24 01:47 — Hotfix 02.2.1-HF1: removidos ignores `*.config.mjs`/`*.config.js` en ESLint flat config para eliminar warning de detección del plugin Next.

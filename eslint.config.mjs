@@ -102,6 +102,6 @@ export default tseslint.config(
 
   // === Ignores ===
   {
-    ignores: ['.next/', 'node_modules/', '*.config.mjs', '*.config.js', 'scripts/'],
+    ignores: ['.next/', 'node_modules/', 'scripts/'],
   },
 );
