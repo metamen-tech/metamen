@@ -1,26 +1,127 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* === Fondos (Sistema de Elevacion) === */
+  --color-bg-base: #0A0A0A;
+  --color-bg-card: #1A1A1A;
+  --color-bg-elevated: #2D2D2D;
+
+  /* === Accent (Sistema Dual) === */
+  --color-accent-gold: #D4AF37;
+  --color-accent-gold-hover: #B8941F;
+  --color-accent-cta: #FF073A;
+  --color-accent-cta-hover: #DC143C;
+  --color-accent-active: #00E5FF;
+
+  /* === Estados Semanticos === */
+  --color-state-error: #FF0000;
+  --color-state-success: #00FF88;
+  --color-state-warning: #FFB800;
+  --color-state-info: #00E5FF;
+
+  /* === Texto === */
+  --color-text-primary: #FFFFFF;
+  --color-text-glow: #F8FFFF;
+  --color-text-secondary: #B0B0B0;
+  --color-text-disabled: #808080;
+
+  /* === Vectores === */
+  --color-vector-aura: #9B59B6;
+  --color-vector-aura-secondary: #E8D5F2;
+  --color-vector-jawline: #E74C3C;
+  --color-vector-jawline-secondary: #FADBD8;
+  --color-vector-wealth: #27AE60;
+  --color-vector-wealth-secondary: #D5F5E3;
+  --color-vector-physique: #E67E22;
+  --color-vector-physique-secondary: #FDEBD0;
+  --color-vector-social: #3498DB;
+  --color-vector-social-secondary: #D6EAF8;
+  --color-vector-env: #1ABC9C;
+  --color-vector-env-secondary: #D1F2EB;
+
+  /* === Niveles === */
+  --color-level-low: #95A5A6;
+  --color-level-mid: #8D6E63;
+  --color-level-high: #3498DB;
+  --color-level-elite: #D4AF37;
+  --color-level-god: #9B59B6;
+
+  /* === Rarezas === */
+  --color-rarity-common: #95A5A6;
+  --color-rarity-rare: #3498DB;
+  --color-rarity-epic: #9B59B6;
+  --color-rarity-legendary: #D4AF37;
+
+  /* === Avatares === */
+  --color-avatar-rastas: #9B59B6;
+  --color-avatar-guarro: #E74C3C;
+  --color-avatar-pecas: #27AE60;
+  --color-avatar-greñas: #E67E22;
+  --color-avatar-guero: #3498DB;
+  --color-avatar-lic: #1ABC9C;
+
+  /* === Tipografia === */
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+  --font-size-hero: 3rem;
+  --font-size-h1: 2rem;
+  --font-size-h2: 1.5rem;
+  --font-size-h3: 1.25rem;
+  --font-size-body: 1rem;
+  --font-size-small: 0.875rem;
+  --font-size-xs: 0.75rem;
+  --line-height-tight: 1.1;
+  --line-height-snug: 1.2;
+  --line-height-normal: 1.5;
+
+  /* === Radius === */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-full: 9999px;
+
+  /* === Motion === */
+  --duration-fast: 150ms;
+  --duration-normal: 300ms;
+  --duration-slow: 500ms;
+  --ease-default: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* === Sombras === */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+  --shadow-glow-gold: 0 0 20px rgba(212, 175, 55, 0.3);
+  --shadow-glow-cta: 0 0 20px rgba(255, 7, 58, 0.3);
+  --shadow-glow-god: 0 0 20px rgba(155, 89, 182, 0.4);
+
+  /* === Bordes === */
+  --border-subtle: 1px solid rgba(255, 255, 255, 0.1);
+
+  /* === Spacing === */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+
+  /* === Alias base del sistema === */
+  --background: var(--color-bg-base);
+  --foreground: var(--color-text-primary);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-background: var(--color-bg-base);
+  --color-foreground: var(--color-text-primary);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
 }
