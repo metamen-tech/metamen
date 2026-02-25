@@ -16,11 +16,11 @@
 | ----------------------- | ---------------------------------------------------- |
 | Fase actual             | MVP v1.0                                             |
 | Caja en curso           | **CAJA MVP-02: Infraestructura**                     |
-| Última tarea completada | `02.4.2` — Integration tests con Supabase local      |
+| Última tarea completada | `02.4.4` — Security audit con 4 herramientas y SLA    |
 | Próxima tarea           | `02.4.3` — Pendiente definición                      |
 | Bloqueadores            | Ninguno                                              |
 | Fecha inicio proyecto   | 2026-02-21                                           |
-| Último commit           | `6006c48` — test(ci): add Supabase integration tests |
+| Último commit           | `PENDIENTE` — chore(02): add security audit workflow with 4 tools and SLA policy |
 | Branch                  | main                                                 |
 
 ## MAPA DE PROGRESO
@@ -319,6 +319,17 @@ FORMATO POR TAREA:
 - **Commit**: `6006c48` — test(ci): add Supabase integration tests with local DB and CI workflow
 - **Notas**: Se corrigió bug de cast `VARCHAR(20) → TEXT` en `fn_complete_task_transaction` (línea 116 de migración 006). Storage container falló health check en primer arranque post-reinicio (resuelto con stop/start limpio). Warning de Analytics en Windows (no bloqueante).
 
+### [02.4.4] — Security audit con 4 herramientas y SLA
+
+- **Estado**: ✅ COMPLETADA
+- **Fecha**: 2026-02-25 00:54
+- **Tipo**: [CONFIG]
+- **Archivos creados/modificados**: `.github/workflows/security.yml`, `.github/SECURITY.md`, `bitacora.md`
+- **Tests**: N/A (tarea de configuración/documentación)
+- **Validación**: YAML válido por `pnpm exec prettier --check .github/workflows/security.yml` ✅; 4 jobs paralelos sin `needs` (`pnpm-audit`, `snyk`, `codeql`, `gitleaks`) ✅; `pnpm audit --audit-level=high` configurado ✅; `snyk/actions/node@master` con `--severity-threshold=high` ✅; CodeQL `init@v3`/`analyze@v3` con `javascript-typescript` ✅; Gitleaks `@v2` con `fetch-depth: 0` ✅; triggers `schedule` + `pull_request` ✅; `.github/SECURITY.md` con 4 secciones y tabla SLA ✅; `pnpm lint` exit 0 ✅; `pnpm type-check` exit 0 ✅; sin Trivy ✅
+- **Commit**: `PENDIENTE` — chore(02): add security audit workflow with 4 tools and SLA policy
+- **Notas**: En `docs/cajas/caja_2_VFull.md` la tarea equivalente aparece como `02.4.5`; se ejecutó como `02.4.4` siguiendo instrucción explícita de la sesión.
+
 ---
 
 ## ISSUES Y DEUDA TÉCNICA
@@ -362,3 +373,4 @@ FORMATO POR TAREA:
 - 2026-02-24 08:57 — Completada tarea 02.3.3: documentación de branching + creación de `develop` + branch protection en `main/develop` por `gh api`.
 - 2026-02-24 09:51 — Completada tarea 02.4.1: Vitest 2.x + workflow CI con sharding (2 shards) y ejecución exitosa en GitHub Actions (run `22358578811`).
 - 2026-02-24 17:07 — Completada tarea 02.4.2: Supabase CLI + 6 migraciones SQL (ENUMs, funciones, tablas, motor de juego, transacciones) + seed.sql + 3 test files (24 tests) + CI workflow `integration.yml` + `vitest.integration.config.ts`. Corregido bug de cast VARCHAR→TEXT en fn_complete_task_transaction. Validación completa: 24/24 integration tests, lint/type-check/build OK.
+- 2026-02-25 00:54 — Completada tarea 02.4.4: creado workflow `Security Audit` con 4 jobs (`pnpm-audit`, `snyk`, `codeql`, `gitleaks`) + política SLA en `.github/SECURITY.md`; validado YAML, lint y type-check.
