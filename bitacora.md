@@ -12,16 +12,16 @@
 
 ## ESTADO GENERAL
 
-| Campo                   | Valor                                           |
-| ----------------------- | ----------------------------------------------- |
-| Fase actual             | MVP v1.0                                        |
-| Caja en curso           | **CAJA MVP-02: Infraestructura**                |
-| Última tarea completada | `02.4.2` — Integration tests con Supabase local |
-| Próxima tarea           | `02.4.3` — Pendiente definición                 |
-| Bloqueadores            | Ninguno                                         |
-| Fecha inicio proyecto   | 2026-02-21                                      |
-| Último commit           | Pendiente — commit de tarea 02.4.2              |
-| Branch                  | main                                            |
+| Campo                   | Valor                                                |
+| ----------------------- | ---------------------------------------------------- |
+| Fase actual             | MVP v1.0                                             |
+| Caja en curso           | **CAJA MVP-02: Infraestructura**                     |
+| Última tarea completada | `02.4.2` — Integration tests con Supabase local      |
+| Próxima tarea           | `02.4.3` — Pendiente definición                      |
+| Bloqueadores            | Ninguno                                              |
+| Fecha inicio proyecto   | 2026-02-21                                           |
+| Último commit           | `6006c48` — test(ci): add Supabase integration tests |
+| Branch                  | main                                                 |
 
 ## MAPA DE PROGRESO
 
@@ -316,7 +316,7 @@ FORMATO POR TAREA:
 - **Archivos creados/modificados**: `supabase/migrations/20260224000001_initial_enums.sql`, `20260224000002_utility_functions.sql`, `20260224000003_tables.sql`, `20260224000004_game_functions.sql`, `20260224000005_task_config.sql`, `20260224000006_transaction_functions.sql`, `supabase/seed.sql`, `tests/integration/setup.ts`, `tests/integration/complete-task.test.ts`, `tests/integration/judgement-night.test.ts`, `tests/integration/overall-score.test.ts`, `.github/workflows/integration.yml`, `vitest.integration.config.ts`, `package.json`
 - **Tests**: `pnpm test:integration` (24 passed, 0 failed); `pnpm test --run` (2 passed, 0 failed)
 - **Validación**: `supabase start` 13 servicios healthy ✅; `supabase db reset` 6 migraciones + seed sin errores ✅; `pnpm test:integration` 24/24 ✅; `pnpm test --run` 2/2 ✅; `pnpm lint` exit 0 ✅; `pnpm type-check` exit 0 ✅; `pnpm build` exit 0 (111kB First Load) ✅
-- **Commit**: Pendiente autorización del usuario
+- **Commit**: `6006c48` — test(ci): add Supabase integration tests with local DB and CI workflow
 - **Notas**: Se corrigió bug de cast `VARCHAR(20) → TEXT` en `fn_complete_task_transaction` (línea 116 de migración 006). Storage container falló health check en primer arranque post-reinicio (resuelto con stop/start limpio). Warning de Analytics en Windows (no bloqueante).
 
 ---
