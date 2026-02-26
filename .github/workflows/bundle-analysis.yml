@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout PR branch
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -77,7 +77,7 @@ jobs:
           echo "size_kb=$PR_SIZE_KB" >> "$GITHUB_OUTPUT"
 
       - name: Checkout main branch in separate path
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: main
           path: base-branch
