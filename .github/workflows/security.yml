@@ -39,6 +39,7 @@ jobs:
   snyk:
     name: Snyk Security Scan
     runs-on: ubuntu-latest
+    if: github.event_name != 'pull_request' || github.actor != 'dependabot[bot]'
     steps:
       - uses: actions/checkout@v6
       - uses: pnpm/action-setup@v4
