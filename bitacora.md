@@ -16,17 +16,17 @@
 | ----------------------- | ---------------------------------------------------- |
 | Fase actual             | MVP v1.0                                             |
 | Caja en curso           | **CAJA MVP-02: Infraestructura**                     |
-| Última tarea completada | `02.4.8` — Lighthouse CI para performance audits |
+| Última tarea completada | `02.4.9` — Production deploy con smoke tests y rollback |
 | Próxima tarea           | `02.4.3` — Pendiente definición                      |
 | Bloqueadores            | Ninguno                                              |
 | Fecha inicio proyecto   | 2026-02-21                                           |
-| Último commit           | `PENDIENTE` — feat(02): add Lighthouse CI workflow for performance audits |
+| Último commit           | `PENDIENTE` — feat(02): add production deploy workflow with smoke tests and rollback |
 | Branch                  | main                                                 |
 
 ## MAPA DE PROGRESO
 
 ```
-CAJA MVP-02: Infraestructura     [▓▓▓▓▓▓▓▓░░] 23/96  ← EN CURSO
+CAJA MVP-02: Infraestructura     [▓▓▓▓▓▓▓▓░░] 24/96  ← EN CURSO
 CAJA MVP-03: Base de Datos       [░░░░░░░░░░] 0/??
 CAJA MVP-04: Motor Core          [░░░░░░░░░░] 0/??
 CAJA MVP-05: Auth/Onboarding     [░░░░░░░░░░] 0/??
@@ -385,6 +385,17 @@ FORMATO POR TAREA:
 - **Commit**: `PENDIENTE` — feat(02): add Lighthouse CI workflow for performance audits
 - **Notas**: Workflow configurado sólo para PR (no push a `main`) y excluye Dependabot para evitar ejecuciones innecesarias con permisos de comentario.
 
+### [02.4.9] — Production deploy con smoke tests y rollback
+
+- **Estado**: ✅ COMPLETADA
+- **Fecha**: 2026-02-26 02:49
+- **Tipo**: [CONFIG]
+- **Archivos creados/modificados**: `.github/workflows/production.yml`, `scripts/smoke-test-production.ts`, `src/app/api/health/route.ts`, `bitacora.md`
+- **Tests**: `pnpm tsx scripts/smoke-test-production.ts` (ejecución técnica validada; salida funcional depende del deployment target)
+- **Validación**: `production.yml` creado con trigger exclusivo `push: main` ✅; pipeline build + deploy + smoke + rollback + issue + notificaciones configurado ✅; rollback vía API Vercel con `previous_id` ✅; script `smoke-test-production.ts` con timeout de 10s por endpoint y exit code por estado global ✅; `src/app/api/health/route.ts` creado con payload `{ status: 'ok', healthy: true }` ✅; `pnpm exec prettier --check .github/workflows/production.yml scripts/smoke-test-production.ts src/app/api/health/route.ts` exit 0 ✅; `pnpm lint` exit 0 ✅; `pnpm type-check` exit 0 ✅
+- **Commit**: `PENDIENTE` — feat(02): add production deploy workflow with smoke tests and rollback
+- **Notas**: Se usó `pnpm dlx vercel@latest` (sin instalación global) para respetar política de package manager.
+
 ---
 
 ## ISSUES Y DEUDA TÉCNICA
@@ -434,3 +445,4 @@ FORMATO POR TAREA:
 - 2026-02-26 01:49 — Completada tarea 02.4.5: agregado `.github/workflows/preview.yml` para deploy preview en Vercel con comentario automático en PR (URL, bundle size, branch y commit), actualización idempotente de comentario y bloqueo de ejecución para Dependabot/forks.
 - 2026-02-26 02:07 — Completadas tareas 02.4.6 y 02.4.7: agregados `.github/workflows/bundle-analysis.yml` (límite 200KB + comentario idempotente en PR + artifact) y `.github/dependabot.yml` (updates semanales, ignore de majors críticos y grupos de dependencias).
 - 2026-02-26 02:24 — Completada tarea 02.4.8: agregado `.github/workflows/lighthouse.yml` + `lighthouserc.js` para auditorías Lighthouse en PR, artifact de reportes y comentario idempotente con scores por URL.
+- 2026-02-26 02:49 — Completada tarea 02.4.9: agregado `.github/workflows/production.yml` (deploy prod + smoke tests + rollback + issue/notificaciones), `scripts/smoke-test-production.ts` y endpoint `src/app/api/health/route.ts`.
