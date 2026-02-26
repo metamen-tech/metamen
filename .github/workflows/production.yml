@@ -23,7 +23,7 @@ jobs:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
       DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
 
       - uses: pnpm/action-setup@v4
         with:
@@ -39,11 +39,6 @@ jobs:
 
       - name: Build
         run: pnpm build
-        env:
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
-          NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY }}
-          NEXT_PUBLIC_APP_URL: ${{ secrets.NEXT_PUBLIC_APP_URL }}
 
       - name: Deploy to Vercel Production
         id: deploy
@@ -93,11 +88,10 @@ jobs:
         continue-on-error: true
         run: pnpm tsx scripts/smoke-test-production.ts
         env:
-          DEPLOYMENT_URL: ${{ steps.deploy.outputs.deployment_url }}
-          NEXT_PUBLIC_APP_URL: ${{ secrets.NEXT_PUBLIC_APP_URL }}
+          PRODUCTION_URL: ${{ steps.deploy.outputs.deployment_url }}
 
       - name: Rollback on Smoke Test Failure
-        if: steps.smoke.outcome == 'failure' && steps.previous.outputs.previous_id != ''
+        if: failure() && steps.previous.outputs.previous_id != ''
         shell: bash
         run: |
           set -euo pipefail

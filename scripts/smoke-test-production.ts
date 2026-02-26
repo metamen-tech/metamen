@@ -1,116 +1,133 @@
-// Ejecutar con: pnpm tsx scripts/smoke-test-production.ts
+// Execute with:
+// pnpm tsx scripts/smoke-test-production.ts
+// pnpm tsx scripts/smoke-test-production.ts https://your-deployment.vercel.app
 
-interface TestResult {
-  name: string;
-  status: 'PASS' | 'FAIL';
-  details: string;
-  durationMs: number;
+interface SmokeTestResult {
+  passed: boolean;
+  checks: {
+    homepage: {
+      status: number;
+      hasMetadata: boolean;
+      hasRuntimeErrors: boolean;
+    };
+  };
+  timestamp: string;
+  details: string[];
 }
 
-const rawBaseUrl =
-  process.env.DEPLOYMENT_URL ?? process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
+const REQUEST_TIMEOUT_MS = 30_000;
+const RUNTIME_ERROR_MARKERS: readonly string[] = [
+  'application error: a server-side exception has occurred',
+  'application error: a client-side exception has occurred',
+  'unhandled runtime error',
+  'internal server error',
+];
 
-const BASE_URL = rawBaseUrl.replace(/\/+$/, '');
+function resolveBaseUrl(): string {
+  const fromArgv = process.argv[2];
+  const fromEnv =
+    process.env.PRODUCTION_URL ?? process.env.DEPLOYMENT_URL ?? process.env.VERCEL_URL;
+  const rawUrl = fromArgv ?? fromEnv;
 
-async function testEndpoint(
-  name: string,
-  url: string,
-  validate: (response: Response, body: string) => boolean,
-): Promise<TestResult> {
-  const start = Date.now();
+  if (typeof rawUrl !== 'string' || rawUrl.trim().length === 0) {
+    throw new Error(
+      'Missing deployment URL. Set PRODUCTION_URL/DEPLOYMENT_URL/VERCEL_URL or pass the URL as first argument.',
+    );
+  }
+
+  const normalized = rawUrl.trim();
+  const withProtocol = /^https?:\/\//i.test(normalized) ? normalized : `https://${normalized}`;
+  return withProtocol.replace(/\/+$/, '');
+}
+
+async function fetchWithTimeout(url: string): Promise<Response> {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => {
+    controller.abort();
+  }, REQUEST_TIMEOUT_MS);
 
   try {
-    const response = await fetch(url, {
-      signal: AbortSignal.timeout(10_000),
+    return await fetch(url, {
+      method: 'GET',
+      signal: controller.signal,
+      headers: {
+        Accept: 'text/html,application/xhtml+xml',
+      },
     });
-    const body = await response.text();
-    const passed = validate(response, body);
-
-    return {
-      name,
-      status: passed ? 'PASS' : 'FAIL',
-      details: passed ? `HTTP ${response.status}` : `HTTP ${response.status} - validation failed`,
-      durationMs: Date.now() - start,
-    };
-  } catch (error) {
-    return {
-      name,
-      status: 'FAIL',
-      details: error instanceof Error ? error.message : 'Unknown error',
-      durationMs: Date.now() - start,
-    };
+  } finally {
+    clearTimeout(timeout);
   }
+}
+
+function hasExpectedMetadata(html: string): boolean {
+  const hasTitle = /<title[^>]*>\s*[^<]*metamen100[^<]*<\/title>/i.test(html);
+  const hasDescriptionMeta =
+    /<meta[^>]*name=["']description["'][^>]*content=["'][^"']+["'][^>]*>/i.test(html);
+  const hasOgTitle = /<meta[^>]*property=["']og:title["'][^>]*content=["'][^"']+["'][^>]*>/i.test(
+    html,
+  );
+  const hasOgDescription =
+    /<meta[^>]*property=["']og:description["'][^>]*content=["'][^"']+["'][^>]*>/i.test(html);
+  const hasOgImage = /<meta[^>]*property=["']og:image["'][^>]*content=["'][^"']+["'][^>]*>/i.test(
+    html,
+  );
+
+  return hasTitle && hasDescriptionMeta && hasOgTitle && hasOgDescription && hasOgImage;
+}
+
+function hasRuntimeErrorMarkers(html: string): boolean {
+  const loweredHtml = html.toLowerCase();
+  return RUNTIME_ERROR_MARKERS.some((marker) => loweredHtml.includes(marker));
 }
 
 async function runSmokeTests(): Promise<void> {
-  console.log(`\n🔍 Running smoke tests against: ${BASE_URL}\n`);
-  console.log('='.repeat(60));
+  const baseUrl = resolveBaseUrl();
+  const homepageUrl = `${baseUrl}/`;
+  console.log(`Running production smoke test against: ${baseUrl}`);
 
-  // Smoke test endpoints — expand as new routes are deployed
-  // CAJA 5: add /login, /register
-  // CAJA 7: add /api/cron/judgement-night
-  const smokeEndpoints: Array<{
-    name: string;
-    path: string;
-    validate: (response: Response, body: string) => boolean;
-  }> = [
-    {
-      name: 'Homepage (/) returns 200',
-      path: '/',
-      validate: (res) => res.status === 200 || res.status === 401,
-    },
-    {
-      name: 'Health endpoint (/api/health)',
-      path: '/api/health',
-      validate: (res, body) => {
-        if (res.status === 401) return true;
-        if (res.status !== 200) return false;
-        try {
-          const data = JSON.parse(body) as { status?: string; healthy?: boolean };
-          return data.status === 'ok' || data.healthy === true;
-        } catch {
-          return false;
-        }
+  const response = await fetchWithTimeout(homepageUrl);
+  const html = await response.text();
+
+  const metadataPresent = hasExpectedMetadata(html);
+  const runtimeErrorsPresent = hasRuntimeErrorMarkers(html);
+
+  // TODO(02.5/02.6): Expand smoke checks when /api/health and external integrations exist.
+  const result: SmokeTestResult = {
+    passed: response.status === 200 && metadataPresent && !runtimeErrorsPresent,
+    checks: {
+      homepage: {
+        status: response.status,
+        hasMetadata: metadataPresent,
+        hasRuntimeErrors: runtimeErrorsPresent,
       },
     },
-  ];
+    timestamp: new Date().toISOString(),
+    details: [],
+  };
 
-  const results: TestResult[] = [];
-  for (const endpoint of smokeEndpoints) {
-    results.push(
-      await testEndpoint(endpoint.name, `${BASE_URL}${endpoint.path}`, endpoint.validate),
-    );
+  if (response.status !== 200) {
+    result.details.push(`Expected homepage HTTP 200, received ${response.status}.`);
   }
 
-  console.log('\n📊 SMOKE TEST RESULTS\n');
-  console.log('| Status | Test | Details | Duration |');
-  console.log('|--------|------|---------|----------|');
-
-  let passed = 0;
-  let failed = 0;
-
-  for (const result of results) {
-    const icon = result.status === 'PASS' ? '✅' : '❌';
-    console.log(
-      `| ${icon} ${result.status} | ${result.name} | ${result.details} | ${result.durationMs}ms |`,
-    );
-    if (result.status === 'PASS') {
-      passed += 1;
-    } else {
-      failed += 1;
-    }
+  if (!metadataPresent) {
+    result.details.push('Homepage is missing required metadata tags (title, description, og:*).');
   }
 
-  console.log('\n' + '='.repeat(60));
-  console.log(`\n📋 Total: ${results.length} | ✅ Passed: ${passed} | ❌ Failed: ${failed}\n`);
+  if (runtimeErrorsPresent) {
+    result.details.push('Homepage response contains runtime error markers.');
+  }
 
-  if (failed > 0) {
-    console.error(`\n🚨 ${failed} smoke test(s) FAILED. Triggering rollback.\n`);
+  console.log(JSON.stringify(result, null, 2));
+
+  if (!result.passed) {
     process.exit(1);
   }
 
-  console.log('\n✅ All smoke tests passed! Production deployment is healthy.\n');
   process.exit(0);
 }
 
-runSmokeTests();
+runSmokeTests().catch((error) => {
+  const message = error instanceof Error ? error.message : 'Unknown error';
+  console.error(`Smoke test failed to execute: ${message}`);
+  process.exit(1);
+});

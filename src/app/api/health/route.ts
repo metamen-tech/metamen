@@ -1,14 +1,19 @@
 import { NextResponse } from 'next/server';
 
 export async function GET() {
-  const checks: Record<string, string> = {};
-
-  checks['app'] = 'ok';
-  checks['timestamp'] = new Date().toISOString();
-
-  return NextResponse.json({
+  const payload = {
     status: 'ok',
     healthy: true,
-    checks,
+    checks: {
+      app: 'ok',
+      timestamp: new Date().toISOString(),
+    },
+  };
+
+  return NextResponse.json(payload, {
+    status: 200,
+    headers: {
+      'Cache-Control': 'no-store',
+    },
   });
 }

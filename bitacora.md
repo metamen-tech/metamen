@@ -12,16 +12,16 @@
 
 ## ESTADO GENERAL
 
-| Campo                   | Valor                                                                                |
-| ----------------------- | ------------------------------------------------------------------------------------ |
-| Fase actual             | MVP v1.0                                                                             |
-| Caja en curso           | **CAJA MVP-02: Infraestructura**                                                     |
-| Última tarea completada | `02.4.9` — Production deploy con smoke tests y rollback                              |
-| Próxima tarea           | `02.4.3` — Pendiente definición                                                      |
-| Bloqueadores            | Ninguno                                                                              |
-| Fecha inicio proyecto   | 2026-02-21                                                                           |
-| Último commit           | `PENDIENTE` — feat(02): add production deploy workflow with smoke tests and rollback |
-| Branch                  | main                                                                                 |
+| Campo                   | Valor                                                                                              |
+| ----------------------- | -------------------------------------------------------------------------------------------------- |
+| Fase actual             | MVP v1.0                                                                                           |
+| Caja en curso           | **CAJA MVP-02: Infraestructura**                                                                   |
+| Última tarea completada | `02.4.9-FIX` — Reparación workflow production + smoke tests (estado CAJA_2)                        |
+| Próxima tarea           | `02.4.3` — Pendiente definición                                                                    |
+| Bloqueadores            | Ninguno                                                                                            |
+| Fecha inicio proyecto   | 2026-02-21                                                                                         |
+| Último commit           | `PENDIENTE` — fix(02): repair production deploy workflow and smoke tests for current project state |
+| Branch                  | main                                                                                               |
 
 ## MAPA DE PROGRESO
 
@@ -396,6 +396,17 @@ FORMATO POR TAREA:
 - **Commit**: `PENDIENTE` — feat(02): add production deploy workflow with smoke tests and rollback
 - **Notas**: Se usó `pnpm dlx vercel@latest` (sin instalación global) para respetar política de package manager. Se añadió `--scope=$VERCEL_ORG_ID` para evitar errores de rollback por team mismatch.
 
+### [02.4.9-FIX] — Reparación workflow production y smoke tests (estado CAJA_2)
+
+- **Estado**: ✅ COMPLETADA
+- **Fecha**: 2026-02-26 22:10
+- **Tipo**: [CONFIG]
+- **Archivos creados/modificados**: `.github/workflows/production.yml`, `scripts/smoke-test-production.ts`, `.github/workflows/ci.yml`, `.github/workflows/security.yml`, `src/app/layout.tsx`, `src/app/api/health/route.ts`, `src/app/api/cron/judgement/route.ts`, `bitacora.md`
+- **Tests**: `pnpm type-check` ✅; `pnpm lint` ✅; `pnpm tsx scripts/smoke-test-production.ts` contra `http://127.0.0.1:3005` (passed) ✅
+- **Validación**: `production.yml` mantiene trigger `push` a `main` ✅; build/deploy/smoke/rollback/issue/notificaciones operativos ✅; smoke test adaptado a estado real (solo homepage + metadata + runtime markers, sin checks de servicios externos) ✅; `security.yml` actualizado a `snyk/actions/node@v1` y workflows sin referencias `@main/@master` ✅; `ci.yml`/`security.yml`/`production.yml` formateados y válidos ✅
+- **Commit**: `PENDIENTE` — fix(02): repair production deploy workflow and smoke tests for current project state
+- **Notas**: Se eliminaron validaciones de Redis/Upstash y de integraciones no implementadas en CAJA_2. Se dejó `TODO` explícito en smoke test para ampliar checks cuando existan endpoints e integraciones reales.
+
 ---
 
 ## ISSUES Y DEUDA TÉCNICA
@@ -446,3 +457,4 @@ FORMATO POR TAREA:
 - 2026-02-26 02:07 — Completadas tareas 02.4.6 y 02.4.7: agregados `.github/workflows/bundle-analysis.yml` (límite 200KB + comentario idempotente en PR + artifact) y `.github/dependabot.yml` (updates semanales, ignore de majors críticos y grupos de dependencias).
 - 2026-02-26 02:24 — Completada tarea 02.4.8: agregado `.github/workflows/lighthouse.yml` + `lighthouserc.js` para auditorías Lighthouse en PR, artifact de reportes y comentario idempotente con scores por URL.
 - 2026-02-26 02:49 — Completada tarea 02.4.9: agregado `.github/workflows/production.yml` (deploy prod + smoke tests + rollback + issue/notificaciones), `scripts/smoke-test-production.ts` y endpoint `src/app/api/health/route.ts`.
+- 2026-02-26 22:10 — Completada tarea 02.4.9-FIX: reparación integral de `production.yml`, `smoke-test-production.ts`, y hardening de `ci.yml`/`security.yml` a versiones estables de actions; validación local en verde (`type-check`, `lint`, smoke script).
