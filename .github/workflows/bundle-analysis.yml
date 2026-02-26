@@ -162,7 +162,7 @@ jobs:
           echo "exceeds_limit=$EXCEEDS_LIMIT" >> "$GITHUB_OUTPUT"
 
       - name: Comment bundle analysis in PR
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         env:
           BASE_BUNDLE_SIZE: ${{ steps.compare.outputs.base_kb }}
           PR_BUNDLE_SIZE: ${{ steps.compare.outputs.pr_kb }}
