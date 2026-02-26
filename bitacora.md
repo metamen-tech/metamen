@@ -16,17 +16,17 @@
 | ----------------------- | ---------------------------------------------------- |
 | Fase actual             | MVP v1.0                                             |
 | Caja en curso           | **CAJA MVP-02: Infraestructura**                     |
-| Última tarea completada | `02.4.7` — Configurar Dependabot para actualizaciones |
+| Última tarea completada | `02.4.8` — Lighthouse CI para performance audits |
 | Próxima tarea           | `02.4.3` — Pendiente definición                      |
 | Bloqueadores            | Ninguno                                              |
 | Fecha inicio proyecto   | 2026-02-21                                           |
-| Último commit           | `PENDIENTE` — chore(02): add bundle analysis workflow and dependabot config |
+| Último commit           | `PENDIENTE` — feat(02): add Lighthouse CI workflow for performance audits |
 | Branch                  | main                                                 |
 
 ## MAPA DE PROGRESO
 
 ```
-CAJA MVP-02: Infraestructura     [▓▓▓▓▓▓▓▓░░] 22/96  ← EN CURSO
+CAJA MVP-02: Infraestructura     [▓▓▓▓▓▓▓▓░░] 23/96  ← EN CURSO
 CAJA MVP-03: Base de Datos       [░░░░░░░░░░] 0/??
 CAJA MVP-04: Motor Core          [░░░░░░░░░░] 0/??
 CAJA MVP-05: Auth/Onboarding     [░░░░░░░░░░] 0/??
@@ -374,6 +374,17 @@ FORMATO POR TAREA:
 - **Commit**: `PENDIENTE` — chore(02): add bundle analysis workflow and dependabot config
 - **Notas**: Sin instalación de dependencias nuevas; solo archivos de configuración.
 
+### [02.4.8] — Lighthouse CI para performance audits
+
+- **Estado**: ✅ COMPLETADA
+- **Fecha**: 2026-02-26 02:24
+- **Tipo**: [CONFIG]
+- **Archivos creados/modificados**: `.github/workflows/lighthouse.yml`, `lighthouserc.js`, `bitacora.md`
+- **Tests**: N/A (tarea de CI/CD)
+- **Validación**: trigger `pull_request` en `main/develop` ✅; job `lighthouse-audit` con `continue-on-error: true` ✅; stack Node20 + pnpm 10.28.2 + `pnpm install/build/start` ✅; ejecución de LHCI por `npx @lhci/cli@latest autorun` ✅; upload de artifact `lighthouse-report` con retención 14 días ✅; comentario en PR con marcador `<!-- lighthouse-ci-report -->` y lógica update/create ✅; thresholds perf/a11y/bp/seo + budget script 200KB en `lighthouserc.js` ✅; `pnpm exec prettier --check .github/workflows/lighthouse.yml lighthouserc.js` exit 0 ✅; `pnpm lint` exit 0 ✅; `pnpm type-check` exit 0 ✅
+- **Commit**: `PENDIENTE` — feat(02): add Lighthouse CI workflow for performance audits
+- **Notas**: Workflow configurado sólo para PR (no push a `main`) y excluye Dependabot para evitar ejecuciones innecesarias con permisos de comentario.
+
 ---
 
 ## ISSUES Y DEUDA TÉCNICA
@@ -422,3 +433,4 @@ FORMATO POR TAREA:
 - 2026-02-25 23:36 — Completada tarea FIX-NEXT-CVE: upgrade `next`/`eslint-config-next`/`@next/eslint-plugin-next` a 15.5.12, validaciones type-check/lint/build OK, `pnpm audit` sin high/critical y excepción temporal `.snyk` para `SNYK-JS-NEXT-15105315` (expira 2026-03-31).
 - 2026-02-26 01:49 — Completada tarea 02.4.5: agregado `.github/workflows/preview.yml` para deploy preview en Vercel con comentario automático en PR (URL, bundle size, branch y commit), actualización idempotente de comentario y bloqueo de ejecución para Dependabot/forks.
 - 2026-02-26 02:07 — Completadas tareas 02.4.6 y 02.4.7: agregados `.github/workflows/bundle-analysis.yml` (límite 200KB + comentario idempotente en PR + artifact) y `.github/dependabot.yml` (updates semanales, ignore de majors críticos y grupos de dependencias).
+- 2026-02-26 02:24 — Completada tarea 02.4.8: agregado `.github/workflows/lighthouse.yml` + `lighthouserc.js` para auditorías Lighthouse en PR, artifact de reportes y comentario idempotente con scores por URL.

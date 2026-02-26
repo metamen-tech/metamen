@@ -1,0 +1,178 @@
+name: Lighthouse CI
+
+on:
+  pull_request:
+    branches: [main, develop]
+
+permissions:
+  pull-requests: write
+  contents: read
+
+concurrency:
+  group: lighthouse-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  lighthouse-audit:
+    name: "\ud83d\udd26 Lighthouse Audit"
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    if: github.actor != 'dependabot[bot]'
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: pnpm
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.28.2
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm build
+
+      - name: Start server
+        shell: bash
+        run: |
+          pnpm start > /tmp/next-start.log 2>&1 &
+          for i in {1..30}; do
+            if curl -fsS http://localhost:3000 >/dev/null; then
+              echo "Server is up"
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "Server failed to start"
+          cat /tmp/next-start.log || true
+          exit 1
+
+      - name: Run Lighthouse CI
+        run: npx @lhci/cli@latest autorun
+
+      - name: Upload report artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-report
+          path: ./lhci-report/
+          retention-days: 14
+          if-no-files-found: warn
+
+      - name: Comment PR with scores
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+
+            const reportDir = './lhci-report';
+            const tag = '<!-- lighthouse-ci-report -->';
+            const thresholds = {
+              performance: 90,
+              accessibility: 95,
+              bestPractices: 90,
+              seo: 90,
+            };
+
+            const readJsonFiles = (dir) => {
+              if (!fs.existsSync(dir)) return [];
+              const entries = fs.readdirSync(dir, { withFileTypes: true });
+              const files = [];
+
+              for (const entry of entries) {
+                const fullPath = path.join(dir, entry.name);
+                if (entry.isDirectory()) {
+                  files.push(...readJsonFiles(fullPath));
+                } else if (
+                  entry.isFile() &&
+                  (
+                    (entry.name.startsWith('lhr-') && entry.name.endsWith('.json')) ||
+                    entry.name.endsWith('.report.json')
+                  )
+                ) {
+                  files.push(fullPath);
+                }
+              }
+              return files;
+            };
+
+            const files = readJsonFiles(reportDir);
+
+            const score = (value) => Math.round((value ?? 0) * 100);
+            const emoji = (value, threshold) => (value >= threshold ? '🟢' : '🟡');
+
+            const rowsByUrl = new Map();
+
+            for (const file of files) {
+              try {
+                const data = JSON.parse(fs.readFileSync(file, 'utf8'));
+                if (!data.requestedUrl || !data.categories) continue;
+                const url = new URL(data.requestedUrl).pathname || '/';
+
+                rowsByUrl.set(url, {
+                  url,
+                  performance: score(data.categories.performance?.score),
+                  accessibility: score(data.categories.accessibility?.score),
+                  bestPractices: score(data.categories['best-practices']?.score),
+                  seo: score(data.categories.seo?.score),
+                });
+              } catch {
+                // Ignore malformed report files.
+              }
+            }
+
+            const rows = Array.from(rowsByUrl.values())
+              .sort((a, b) => a.url.localeCompare(b.url))
+              .map((r) =>
+                `| ${r.url} | ${emoji(r.performance, thresholds.performance)} ${r.performance} | ${emoji(r.accessibility, thresholds.accessibility)} ${r.accessibility} | ${emoji(r.bestPractices, thresholds.bestPractices)} ${r.bestPractices} | ${emoji(r.seo, thresholds.seo)} ${r.seo} |`
+              )
+              .join('\n');
+
+            const fallbackRow = '| N/A | 🟡 N/A | 🟡 N/A | 🟡 N/A | 🟡 N/A |';
+            const tableRows = rows || fallbackRow;
+
+            const body = [
+              tag,
+              '### 🔦 Lighthouse Report',
+              '',
+              '| URL | Performance | Accessibility | Best Practices | SEO |',
+              '| --- | --- | --- | --- | --- |',
+              tableRows,
+              '',
+              'Thresholds: Perf ≥ 90 | A11y ≥ 95 | BP ≥ 90 | SEO ≥ 90',
+              '',
+              'Budget: 200KB JS bundle',
+              '',
+              '🟢 = Pass | 🟡 = Warning (below threshold)',
+            ].join('\n');
+
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              per_page: 100,
+            });
+
+            const existing = comments.find((comment) => comment.body?.includes(tag));
+
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body,
+              });
+            }
