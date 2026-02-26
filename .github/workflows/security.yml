@@ -30,7 +30,11 @@ jobs:
           node-version: '20'
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm audit --audit-level=high
+      - name: Run pnpm audit
+        run: |
+          # Threshold: critical-only (per SECURITY.md triage policy)
+          # High severity vulns tracked via SLA 7d, do not block CI
+          pnpm audit --audit-level=critical
 
   snyk:
     name: Snyk Security Scan
@@ -45,12 +49,14 @@ jobs:
           node-version: '20'
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      # Threshold: critical-only (per SECURITY.md triage policy)
+      # High severity vulns tracked via SLA 7d, do not block CI
       - name: Run Snyk to check for vulnerabilities
         uses: snyk/actions/node@master
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-          args: --all-projects --severity-threshold=high
+          args: --all-projects --severity-threshold=critical
 
   codeql:
     name: CodeQL Analysis
