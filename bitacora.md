@@ -16,17 +16,17 @@
 | ----------------------- | ---------------------------------------------------- |
 | Fase actual             | MVP v1.0                                             |
 | Caja en curso           | **CAJA MVP-02: Infraestructura**                     |
-| Última tarea completada | `02.4.5` — Preview deployments con comentario automático |
+| Última tarea completada | `02.4.7` — Configurar Dependabot para actualizaciones |
 | Próxima tarea           | `02.4.3` — Pendiente definición                      |
 | Bloqueadores            | Ninguno                                              |
 | Fecha inicio proyecto   | 2026-02-21                                           |
-| Último commit           | `PENDIENTE` — chore(02): add preview deployment workflow with pr comments |
+| Último commit           | `PENDIENTE` — chore(02): add bundle analysis workflow and dependabot config |
 | Branch                  | main                                                 |
 
 ## MAPA DE PROGRESO
 
 ```
-CAJA MVP-02: Infraestructura     [▓▓▓▓▓▓▓▓░░] 20/96  ← EN CURSO
+CAJA MVP-02: Infraestructura     [▓▓▓▓▓▓▓▓░░] 22/96  ← EN CURSO
 CAJA MVP-03: Base de Datos       [░░░░░░░░░░] 0/??
 CAJA MVP-04: Motor Core          [░░░░░░░░░░] 0/??
 CAJA MVP-05: Auth/Onboarding     [░░░░░░░░░░] 0/??
@@ -352,6 +352,28 @@ FORMATO POR TAREA:
 - **Commit**: `PENDIENTE` — chore(02): add preview deployment workflow with pr comments
 - **Notas**: Se evitó `npm` en el workflow por regla de proyecto; Vercel CLI se ejecuta con `pnpm dlx`.
 
+### [02.4.6] — Bundle size check con límite 200KB
+
+- **Estado**: ✅ COMPLETADA
+- **Fecha**: 2026-02-26 02:07
+- **Tipo**: [CONFIG]
+- **Archivos creados/modificados**: `.github/workflows/bundle-analysis.yml`, `bitacora.md`
+- **Tests**: N/A (tarea de CI/CD)
+- **Validación**: `.github/workflows/bundle-analysis.yml` creado ✅; trigger en `pull_request` a `main` ✅; build PR + build base (`main`) con extracción de `First Load JS shared by all` y fallback a `.next/static/chunks` ✅; cálculo de delta y validación `>200KB` con fail explícito ✅; comentario idempotente en PR con marcador `<!-- bundle-analysis -->` ✅; artifact `bundle-analysis-*` configurado ✅; `pnpm exec prettier --check .github/workflows/bundle-analysis.yml` exit 0 ✅; `pnpm lint` exit 0 ✅; `pnpm type-check` exit 0 ✅
+- **Commit**: `PENDIENTE` — chore(02): add bundle analysis workflow and dependabot config
+- **Notas**: Se usó `pnpm` en todo el workflow (incluyendo CLI vía `pnpm dlx`) para respetar política del proyecto.
+
+### [02.4.7] — Configurar Dependabot para actualizaciones
+
+- **Estado**: ✅ COMPLETADA
+- **Fecha**: 2026-02-26 02:07
+- **Tipo**: [CONFIG]
+- **Archivos creados/modificados**: `.github/dependabot.yml`, `bitacora.md`
+- **Tests**: N/A (tarea de configuración)
+- **Validación**: `.github/dependabot.yml` creado con `version: 2` ✅; ecosistema `npm` semanal (`monday`, `America/Mexico_City`) con `open-pull-requests-limit: 10` ✅; `ignore` de major bumps para `next`, `react`, `react-dom`, `typescript` ✅; grupos `supabase`, `radix`, `testing`, `linting`, `hookform` ✅; ecosistema `github-actions` semanal con labels `ci`, `automated` ✅; `pnpm exec prettier --check .github/dependabot.yml` exit 0 ✅; `pnpm lint` exit 0 ✅; `pnpm type-check` exit 0 ✅
+- **Commit**: `PENDIENTE` — chore(02): add bundle analysis workflow and dependabot config
+- **Notas**: Sin instalación de dependencias nuevas; solo archivos de configuración.
+
 ---
 
 ## ISSUES Y DEUDA TÉCNICA
@@ -399,3 +421,4 @@ FORMATO POR TAREA:
 - 2026-02-25 00:54 — Completada tarea 02.4.4: creado workflow `Security Audit` con 4 jobs (`pnpm-audit`, `snyk`, `codeql`, `gitleaks`) + política SLA en `.github/SECURITY.md`; validado YAML, lint y type-check.
 - 2026-02-25 23:36 — Completada tarea FIX-NEXT-CVE: upgrade `next`/`eslint-config-next`/`@next/eslint-plugin-next` a 15.5.12, validaciones type-check/lint/build OK, `pnpm audit` sin high/critical y excepción temporal `.snyk` para `SNYK-JS-NEXT-15105315` (expira 2026-03-31).
 - 2026-02-26 01:49 — Completada tarea 02.4.5: agregado `.github/workflows/preview.yml` para deploy preview en Vercel con comentario automático en PR (URL, bundle size, branch y commit), actualización idempotente de comentario y bloqueo de ejecución para Dependabot/forks.
+- 2026-02-26 02:07 — Completadas tareas 02.4.6 y 02.4.7: agregados `.github/workflows/bundle-analysis.yml` (límite 200KB + comentario idempotente en PR + artifact) y `.github/dependabot.yml` (updates semanales, ignore de majors críticos y grupos de dependencias).

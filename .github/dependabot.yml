@@ -1,0 +1,56 @@
+version: 2
+updates:
+  - package-ecosystem: 'npm'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+      timezone: 'America/Mexico_City'
+    open-pull-requests-limit: 10
+    labels:
+      - 'dependencies'
+      - 'automated'
+    ignore:
+      - dependency-name: 'next'
+        update-types:
+          - 'version-update:semver-major'
+      - dependency-name: 'react'
+        update-types:
+          - 'version-update:semver-major'
+      - dependency-name: 'react-dom'
+        update-types:
+          - 'version-update:semver-major'
+      - dependency-name: 'typescript'
+        update-types:
+          - 'version-update:semver-major'
+    groups:
+      supabase:
+        patterns:
+          - '@supabase/*'
+      radix:
+        patterns:
+          - '@radix-ui/*'
+      testing:
+        patterns:
+          - 'vitest'
+          - '@testing-library/*'
+          - 'fast-check'
+      linting:
+        patterns:
+          - 'eslint'
+          - '@eslint/*'
+          - 'prettier'
+      hookform:
+        patterns:
+          - 'react-hook-form'
+          - '@hookform/*'
+
+  - package-ecosystem: 'github-actions'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+      timezone: 'America/Mexico_City'
+    labels:
+      - 'ci'
+      - 'automated'

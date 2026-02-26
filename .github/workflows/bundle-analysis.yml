@@ -1,0 +1,239 @@
+name: Bundle Analysis
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+concurrency:
+  group: bundle-analysis-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  bundle-check:
+    name: Bundle Size Check
+    if: github.actor != 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.28.2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: pnpm
+
+      - name: Install dependencies (PR)
+        run: pnpm install --frozen-lockfile
+
+      - name: Build PR branch and extract bundle size
+        id: pr_bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p bundle-analysis
+          pnpm build | tee bundle-analysis/pr-build.log
+
+          convert_to_kb() {
+            local raw_value="$1"
+            local number unit
+            number="$(echo "$raw_value" | grep -Eo '^[0-9]+(\.[0-9]+)?')"
+            unit="$(echo "$raw_value" | grep -Eo '(kB|KB|MB|B)$' || true)"
+
+            if [ -z "$number" ] || [ -z "$unit" ]; then
+              return 1
+            fi
+
+            case "$unit" in
+              kB|KB) awk "BEGIN { printf \"%.1f\", $number }" ;;
+              MB) awk "BEGIN { printf \"%.1f\", $number * 1024 }" ;;
+              B) awk "BEGIN { printf \"%.1f\", $number / 1024 }" ;;
+              *) return 1 ;;
+            esac
+          }
+
+          PR_LINE="$(grep -E 'First Load JS shared by all' bundle-analysis/pr-build.log | tail -n1 || true)"
+          PR_TOKEN="$(echo "$PR_LINE" | grep -Eo '[0-9]+(\.[0-9]+)?[[:space:]]*(kB|KB|MB|B)' | tr -d ' ' | head -n1 || true)"
+
+          if [ -n "$PR_TOKEN" ] && PR_SIZE_KB="$(convert_to_kb "$PR_TOKEN")"; then
+            :
+          elif [ -d ".next/static/chunks" ]; then
+            PR_SIZE_KB="$(du -sk .next/static/chunks | awk '{printf \"%.1f\", $1}')"
+          else
+            echo "Could not determine PR bundle size."
+            exit 1
+          fi
+
+          echo "size_kb=$PR_SIZE_KB" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout main branch in separate path
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: base-branch
+
+      - name: Install dependencies (base)
+        working-directory: base-branch
+        run: pnpm install --frozen-lockfile
+
+      - name: Build base branch and extract bundle size
+        id: base_bundle
+        shell: bash
+        working-directory: base-branch
+        run: |
+          set -euo pipefail
+          mkdir -p ../bundle-analysis
+          pnpm build | tee ../bundle-analysis/base-build.log
+
+          convert_to_kb() {
+            local raw_value="$1"
+            local number unit
+            number="$(echo "$raw_value" | grep -Eo '^[0-9]+(\.[0-9]+)?')"
+            unit="$(echo "$raw_value" | grep -Eo '(kB|KB|MB|B)$' || true)"
+
+            if [ -z "$number" ] || [ -z "$unit" ]; then
+              return 1
+            fi
+
+            case "$unit" in
+              kB|KB) awk "BEGIN { printf \"%.1f\", $number }" ;;
+              MB) awk "BEGIN { printf \"%.1f\", $number * 1024 }" ;;
+              B) awk "BEGIN { printf \"%.1f\", $number / 1024 }" ;;
+              *) return 1 ;;
+            esac
+          }
+
+          BASE_LINE="$(grep -E 'First Load JS shared by all' ../bundle-analysis/base-build.log | tail -n1 || true)"
+          BASE_TOKEN="$(echo "$BASE_LINE" | grep -Eo '[0-9]+(\.[0-9]+)?[[:space:]]*(kB|KB|MB|B)' | tr -d ' ' | head -n1 || true)"
+
+          if [ -n "$BASE_TOKEN" ] && BASE_SIZE_KB="$(convert_to_kb "$BASE_TOKEN")"; then
+            :
+          elif [ -d ".next/static/chunks" ]; then
+            BASE_SIZE_KB="$(du -sk .next/static/chunks | awk '{printf \"%.1f\", $1}')"
+          else
+            echo "Could not determine base bundle size."
+            exit 1
+          fi
+
+          echo "size_kb=$BASE_SIZE_KB" >> "$GITHUB_OUTPUT"
+
+      - name: Calculate delta and status
+        id: compare
+        shell: bash
+        run: |
+          set -euo pipefail
+          PR_BUNDLE_SIZE="${{ steps.pr_bundle.outputs.size_kb }}"
+          BASE_BUNDLE_SIZE="${{ steps.base_bundle.outputs.size_kb }}"
+          DELTA="$(awk "BEGIN { printf \"%.1f\", $PR_BUNDLE_SIZE - $BASE_BUNDLE_SIZE }")"
+
+          if awk "BEGIN { exit !($PR_BUNDLE_SIZE > 200) }"; then
+            STATUS="❌ Exceeds 200KB"
+            EXCEEDS_LIMIT="true"
+          else
+            STATUS="✅ Within limit"
+            EXCEEDS_LIMIT="false"
+          fi
+
+          cat <<EOF > bundle-analysis/summary.json
+          {
+            "route": "/ (First Load JS)",
+            "base_kb": "$BASE_BUNDLE_SIZE",
+            "pr_kb": "$PR_BUNDLE_SIZE",
+            "delta_kb": "$DELTA",
+            "status": "$STATUS",
+            "exceeds_limit": "$EXCEEDS_LIMIT"
+          }
+          EOF
+
+          echo "pr_kb=$PR_BUNDLE_SIZE" >> "$GITHUB_OUTPUT"
+          echo "base_kb=$BASE_BUNDLE_SIZE" >> "$GITHUB_OUTPUT"
+          echo "delta_kb=$DELTA" >> "$GITHUB_OUTPUT"
+          echo "status=$STATUS" >> "$GITHUB_OUTPUT"
+          echo "exceeds_limit=$EXCEEDS_LIMIT" >> "$GITHUB_OUTPUT"
+
+      - name: Comment bundle analysis in PR
+        uses: actions/github-script@v7
+        env:
+          BASE_BUNDLE_SIZE: ${{ steps.compare.outputs.base_kb }}
+          PR_BUNDLE_SIZE: ${{ steps.compare.outputs.pr_kb }}
+          DELTA_KB: ${{ steps.compare.outputs.delta_kb }}
+          STATUS_TEXT: ${{ steps.compare.outputs.status }}
+          EXCEEDS_LIMIT: ${{ steps.compare.outputs.exceeds_limit }}
+        with:
+          script: |
+            const marker = '<!-- bundle-analysis -->';
+            const base = process.env.BASE_BUNDLE_SIZE;
+            const pr = process.env.PR_BUNDLE_SIZE;
+            const delta = process.env.DELTA_KB;
+            const status = process.env.STATUS_TEXT;
+            const exceeds = process.env.EXCEEDS_LIMIT === 'true';
+            const note = exceeds
+              ? '⚠️ Bundle size exceeds 200KB limit!'
+              : '✅ Bundle size is within the 200KB limit.';
+
+            const body = [
+              marker,
+              '## Bundle Analysis',
+              '',
+              '| Route | Base (KB) | PR (KB) | Delta (KB) | Status |',
+              '| --- | ---: | ---: | ---: | --- |',
+              `| / (First Load JS) | ${base} | ${pr} | ${delta} | ${status} |`,
+              '',
+              note,
+            ].join('\n');
+
+            const comments = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              per_page: 100,
+            });
+
+            const previous = comments.data.find((comment) =>
+              comment.body?.includes(marker)
+            );
+
+            if (previous) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: previous.id,
+                body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body,
+              });
+            }
+
+      - name: Enforce 200KB limit
+        if: steps.compare.outputs.exceeds_limit == 'true'
+        shell: bash
+        run: |
+          echo "PR bundle size is ${{ steps.compare.outputs.pr_kb }}KB and exceeds the 200KB limit."
+          exit 1
+
+      - name: Upload bundle analysis artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bundle-analysis-${{ github.event.pull_request.number }}
+          path: |
+            bundle-analysis/
+            .next/analyze/
+            base-branch/.next/analyze/
+          if-no-files-found: warn
+          retention-days: 14
