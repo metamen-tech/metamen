@@ -50,7 +50,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          DEPLOY_OUTPUT="$(pnpm dlx vercel@latest deploy --prod --yes --token="$VERCEL_TOKEN" 2>&1)"
+          DEPLOY_OUTPUT="$(pnpm dlx vercel@latest deploy --prod --yes --scope="$VERCEL_ORG_ID" --token="$VERCEL_TOKEN" 2>&1)"
           echo "$DEPLOY_OUTPUT"
           DEPLOYMENT_URL="$(echo "$DEPLOY_OUTPUT" | grep -Eo 'https://[a-zA-Z0-9.-]+\.vercel\.app' | tail -n1)"
           if [ -z "$DEPLOYMENT_URL" ]; then
@@ -68,6 +68,9 @@ jobs:
           API_URL="https://api.vercel.com/v6/deployments?limit=2&state=READY&target=production"
           if [ -n "${VERCEL_PROJECT_ID:-}" ]; then
             API_URL="$API_URL&projectId=$VERCEL_PROJECT_ID"
+          fi
+          if [ -n "${VERCEL_ORG_ID:-}" ]; then
+            API_URL="$API_URL&teamId=$VERCEL_ORG_ID"
           fi
 
           DEPLOYMENTS_JSON="$(curl -fsSL -H "Authorization: Bearer $VERCEL_TOKEN" "$API_URL")"
@@ -101,6 +104,7 @@ jobs:
           echo "🚨 Smoke tests failed! Rolling back..."
           pnpm dlx vercel@latest rollback "${{ steps.previous.outputs.previous_id }}" \
             --yes \
+            --scope="$VERCEL_ORG_ID" \
             --token="$VERCEL_TOKEN"
           echo "✅ Rollback initiated to previous deployment: ${{ steps.previous.outputs.previous_id }}"
 

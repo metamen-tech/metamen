@@ -12,16 +12,16 @@
 
 ## ESTADO GENERAL
 
-| Campo                   | Valor                                                |
-| ----------------------- | ---------------------------------------------------- |
-| Fase actual             | MVP v1.0                                             |
-| Caja en curso           | **CAJA MVP-02: Infraestructura**                     |
-| Última tarea completada | `02.4.9` — Production deploy con smoke tests y rollback |
-| Próxima tarea           | `02.4.3` — Pendiente definición                      |
-| Bloqueadores            | Ninguno                                              |
-| Fecha inicio proyecto   | 2026-02-21                                           |
+| Campo                   | Valor                                                                                |
+| ----------------------- | ------------------------------------------------------------------------------------ |
+| Fase actual             | MVP v1.0                                                                             |
+| Caja en curso           | **CAJA MVP-02: Infraestructura**                                                     |
+| Última tarea completada | `02.4.9` — Production deploy con smoke tests y rollback                              |
+| Próxima tarea           | `02.4.3` — Pendiente definición                                                      |
+| Bloqueadores            | Ninguno                                                                              |
+| Fecha inicio proyecto   | 2026-02-21                                                                           |
 | Último commit           | `PENDIENTE` — feat(02): add production deploy workflow with smoke tests and rollback |
-| Branch                  | main                                                 |
+| Branch                  | main                                                                                 |
 
 ## MAPA DE PROGRESO
 
@@ -394,7 +394,7 @@ FORMATO POR TAREA:
 - **Tests**: `pnpm tsx scripts/smoke-test-production.ts` (ejecución técnica validada; salida funcional depende del deployment target)
 - **Validación**: `production.yml` creado con trigger exclusivo `push: main` ✅; pipeline build + deploy + smoke + rollback + issue + notificaciones configurado ✅; rollback por `vercel rollback` con `previous_id` ✅; script `smoke-test-production.ts` con timeout de 10s por endpoint y exit code por estado global ✅; `src/app/api/health/route.ts` creado con payload `{ status: 'ok', healthy: true }` ✅; `pnpm exec prettier --check .github/workflows/production.yml scripts/smoke-test-production.ts src/app/api/health/route.ts` exit 0 ✅; `pnpm lint` exit 0 ✅; `pnpm type-check` exit 0 ✅
 - **Commit**: `PENDIENTE` — feat(02): add production deploy workflow with smoke tests and rollback
-- **Notas**: Se usó `pnpm dlx vercel@latest` (sin instalación global) para respetar política de package manager.
+- **Notas**: Se usó `pnpm dlx vercel@latest` (sin instalación global) para respetar política de package manager. Se añadió `--scope=$VERCEL_ORG_ID` para evitar errores de rollback por team mismatch.
 
 ---
 
