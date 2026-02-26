@@ -99,10 +99,9 @@ jobs:
         run: |
           set -euo pipefail
           echo "🚨 Smoke tests failed! Rolling back..."
-          curl -fsS -X POST \
-            -H "Authorization: Bearer $VERCEL_TOKEN" \
-            -H "Content-Type: application/json" \
-            "https://api.vercel.com/v1/deployments/${{ steps.previous.outputs.previous_id }}/rollback"
+          pnpm dlx vercel@latest rollback "${{ steps.previous.outputs.previous_id }}" \
+            --yes \
+            --token="$VERCEL_TOKEN"
           echo "✅ Rollback initiated to previous deployment: ${{ steps.previous.outputs.previous_id }}"
 
       - name: Create Issue on Failure
