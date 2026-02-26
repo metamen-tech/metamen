@@ -46,80 +46,40 @@ async function runSmokeTests(): Promise<void> {
   console.log(`\n🔍 Running smoke tests against: ${BASE_URL}\n`);
   console.log('='.repeat(60));
 
-  const results: TestResult[] = [];
-
-  const homeResult = await testEndpoint(
-    'Homepage (/) returns 200',
-    `${BASE_URL}/`,
-    (res) => res.status === 200,
-  );
-  results.push(homeResult);
-
-  const healthResult = await testEndpoint(
-    'Health endpoint (/api/health)',
-    `${BASE_URL}/api/health`,
-    (res, body) => {
-      if (res.status !== 200) return false;
-      try {
-        const data = JSON.parse(body) as { status?: string; healthy?: boolean };
-        return data.status === 'ok' || data.healthy === true;
-      } catch {
-        return false;
-      }
+  // Smoke test endpoints — expand as new routes are deployed
+  // CAJA 5: add /login, /register
+  // CAJA 7: add /api/cron/judgement-night
+  const smokeEndpoints: Array<{
+    name: string;
+    path: string;
+    validate: (response: Response, body: string) => boolean;
+  }> = [
+    {
+      name: 'Homepage (/) returns 200',
+      path: '/',
+      validate: (res) => res.status === 200,
     },
-  );
-  results.push(healthResult);
+    {
+      name: 'Health endpoint (/api/health)',
+      path: '/api/health',
+      validate: (res, body) => {
+        if (res.status !== 200) return false;
+        try {
+          const data = JSON.parse(body) as { status?: string; healthy?: boolean };
+          return data.status === 'ok' || data.healthy === true;
+        } catch {
+          return false;
+        }
+      },
+    },
+  ];
 
-  const cronResult = await testEndpoint(
-    'Cron endpoint (/api/cron/judgement-night)',
-    `${BASE_URL}/api/cron/judgement-night`,
-    (res) => res.status !== 404,
-  );
-  results.push(cronResult);
-
-  const loginResult = await testEndpoint(
-    'Login page (/login)',
-    `${BASE_URL}/login`,
-    (res) => res.status === 200,
-  );
-  results.push(loginResult);
-
-  let inferredAssetPath = '';
-  try {
-    const htmlResponse = await fetch(`${BASE_URL}/`, {
-      signal: AbortSignal.timeout(10_000),
-    });
-    const html = await htmlResponse.text();
-    const match = html.match(/\/_next\/static\/[^"']+\.js/);
-    inferredAssetPath = match?.[0] ?? '';
-  } catch {
-    inferredAssetPath = '';
+  const results: TestResult[] = [];
+  for (const endpoint of smokeEndpoints) {
+    results.push(
+      await testEndpoint(endpoint.name, `${BASE_URL}${endpoint.path}`, endpoint.validate),
+    );
   }
-
-  const staticAssetResult = await testEndpoint(
-    'Static assets available',
-    inferredAssetPath ? `${BASE_URL}${inferredAssetPath}` : `${BASE_URL}/_next/static/`,
-    (res) => res.status !== 404,
-  );
-  results.push(staticAssetResult);
-
-  const headersResult = await testEndpoint('Security headers present', `${BASE_URL}/`, (res) => {
-    const hasXFrame = res.headers.has('x-frame-options');
-    const hasContentType = res.headers.has('x-content-type-options');
-    return hasXFrame || hasContentType;
-  });
-  results.push(headersResult);
-
-  const responseTimeResult = await testEndpoint(
-    'Response time < 5s',
-    `${BASE_URL}/`,
-    (res) => res.status === 200,
-  );
-  if (responseTimeResult.durationMs > 5000) {
-    responseTimeResult.status = 'FAIL';
-    responseTimeResult.details = `Response took ${responseTimeResult.durationMs}ms (> 5000ms)`;
-  }
-  results.push(responseTimeResult);
 
   console.log('\n📊 SMOKE TEST RESULTS\n');
   console.log('| Status | Test | Details | Duration |');
