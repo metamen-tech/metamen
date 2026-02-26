@@ -16,17 +16,17 @@
 | ----------------------- | ---------------------------------------------------- |
 | Fase actual             | MVP v1.0                                             |
 | Caja en curso           | **CAJA MVP-02: Infraestructura**                     |
-| Última tarea completada | `02.4.4` — Security audit con 4 herramientas y SLA    |
+| Última tarea completada | `FIX-NEXT-CVE` — Upgrade Next.js 15.5.12 + excepción temporal Snyk |
 | Próxima tarea           | `02.4.3` — Pendiente definición                      |
 | Bloqueadores            | Ninguno                                              |
 | Fecha inicio proyecto   | 2026-02-21                                           |
-| Último commit           | `PENDIENTE` — chore(02): add security audit workflow with 4 tools and SLA policy |
+| Último commit           | `PENDIENTE` — fix(deps): upgrade next.js to patch cve ghsa-f82v-jwr5-mffw |
 | Branch                  | main                                                 |
 
 ## MAPA DE PROGRESO
 
 ```
-CAJA MVP-02: Infraestructura     [▓▓▓▓▓▓▓▓░░] 18/96  ← EN CURSO
+CAJA MVP-02: Infraestructura     [▓▓▓▓▓▓▓▓░░] 19/96  ← EN CURSO
 CAJA MVP-03: Base de Datos       [░░░░░░░░░░] 0/??
 CAJA MVP-04: Motor Core          [░░░░░░░░░░] 0/??
 CAJA MVP-05: Auth/Onboarding     [░░░░░░░░░░] 0/??
@@ -330,12 +330,24 @@ FORMATO POR TAREA:
 - **Commit**: `PENDIENTE` — chore(02): add security audit workflow with 4 tools and SLA policy
 - **Notas**: En `docs/cajas/caja_2_VFull.md` la tarea equivalente aparece como `02.4.5`; se ejecutó como `02.4.4` siguiendo instrucción explícita de la sesión.
 
+### [FIX-NEXT-CVE] — Upgrade Next.js a línea parcheada 15.x
+
+- **Estado**: ✅ COMPLETADA
+- **Fecha**: 2026-02-25 23:36
+- **Tipo**: [CONFIG]
+- **Archivos creados/modificados**: `package.json`, `pnpm-lock.yaml`, `.snyk`, `bitacora.md`
+- **Tests**: N/A (tarea de dependencias/configuración)
+- **Validación**: `pnpm list next` → `15.5.12` ✅; `pnpm type-check` exit 0 ✅; `pnpm lint` exit 0 ✅; `pnpm build` exit 0 ✅; `pnpm audit --audit-level=high` sin high/critical (1 moderate) ✅; `snyk test --all-projects --severity-threshold=high` sin hallazgos tras policy local `.snyk` ✅
+- **Commit**: `PENDIENTE` — fix(deps): upgrade next.js to patch cve ghsa-f82v-jwr5-mffw
+- **Notas**: Snyk reporta `SNYK-JS-NEXT-15105315` como High en toda la rama 15.x y propone fix solo en Next 16.x; se creó excepción temporal en `.snyk` con expiración `2026-03-31` para mantener compatibilidad con la restricción de proyecto (solo Next 15.x).
+
 ---
 
 ## ISSUES Y DEUDA TÉCNICA
 
 <!-- Registrar aquí problemas encontrados que no se resuelven en la tarea actual -->
 
+- **[SECURITY][SNYK] Excepción temporal por versión mayor restringida**: hallazgo `SNYK-JS-NEXT-15105315` (High) no tiene parche disponible en línea 15.x según base de datos de Snyk; fix sugerido únicamente en Next 16.x. **Mitigación actual:** policy `.snyk` con expiración `2026-03-31` y reason documentado. **Acción pendiente:** reevaluar en la siguiente iteración de dependencias para retirar excepción cuando exista fix en 15.x o se habilite migración a 16.x.
 - **[DEPENDENCIAS] 3 Subdependencias Transitivas Deprecated**: `glob@10.5.0`, `node-domexception@1.0.0`, `serialize-error-cjs@0.1.4` reportan warnings al instalar. Se confirma mediante `pnpm why` que provienen internamente de las dependencias raíz `@supabase/ssr` e `inngest`. **No accionable:** El override explícito rompe la cadena interna. Se documenta como deuda técnica pasiva a la espera de que los dueños de los paquetes actualicen sus dependencias internas. Efecto nulo en producción o funcionalidad del motor.
 - **[DEV-ENV] Resolución de `bash` en Windows**: En esta máquina, `bash.exe` por defecto apunta al launcher de WSL (`C:\Windows\System32\bash.exe`) y falla si no hay distro Linux configurada (`/bin/bash` no encontrado). **Mitigación**: ejecutar desde Git Bash o priorizar `C:\Program Files\Git\bin` en `PATH` para usar `pnpm verify`.
 - **[PERF-DEV] HMR Turbopack por encima de objetivo**: Se midió HMR en `403ms` (objetivo <200ms) con warning `Slow filesystem detected` sobre `M:\proyectos\metamen_tech`. No bloquea la ejecución, pero afecta experiencia de desarrollo.
@@ -374,3 +386,4 @@ FORMATO POR TAREA:
 - 2026-02-24 09:51 — Completada tarea 02.4.1: Vitest 2.x + workflow CI con sharding (2 shards) y ejecución exitosa en GitHub Actions (run `22358578811`).
 - 2026-02-24 17:07 — Completada tarea 02.4.2: Supabase CLI + 6 migraciones SQL (ENUMs, funciones, tablas, motor de juego, transacciones) + seed.sql + 3 test files (24 tests) + CI workflow `integration.yml` + `vitest.integration.config.ts`. Corregido bug de cast VARCHAR→TEXT en fn_complete_task_transaction. Validación completa: 24/24 integration tests, lint/type-check/build OK.
 - 2026-02-25 00:54 — Completada tarea 02.4.4: creado workflow `Security Audit` con 4 jobs (`pnpm-audit`, `snyk`, `codeql`, `gitleaks`) + política SLA en `.github/SECURITY.md`; validado YAML, lint y type-check.
+- 2026-02-25 23:36 — Completada tarea FIX-NEXT-CVE: upgrade `next`/`eslint-config-next`/`@next/eslint-plugin-next` a 15.5.12, validaciones type-check/lint/build OK, `pnpm audit` sin high/critical y excepción temporal `.snyk` para `SNYK-JS-NEXT-15105315` (expira 2026-03-31).
