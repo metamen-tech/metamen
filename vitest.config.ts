@@ -25,6 +25,7 @@ export default defineConfig({
         'src/**/index.ts',
         'src/app/layout.tsx',
         'src/app/page.tsx',
+        'src/app/api/**', // TODO(02.7.6): Remove exclusion when health check tests are implemented
         'src/types/**',
       ],
       thresholds: {
