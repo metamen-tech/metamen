@@ -14,7 +14,7 @@ concurrency:
 
 jobs:
   lighthouse-audit:
-    name: "\ud83d\udd26 Lighthouse Audit"
+    name: Lighthouse Audit
     runs-on: ubuntu-latest
     continue-on-error: true
     if: github.actor != 'dependabot[bot]'
