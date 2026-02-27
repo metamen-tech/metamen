@@ -88,10 +88,10 @@ jobs:
         continue-on-error: true
         run: pnpm tsx scripts/smoke-test-production.ts
         env:
-          PRODUCTION_URL: ${{ steps.deploy.outputs.deployment_url }}
+          PRODUCTION_URL: ${{ steps.deploy.outputs.deployment_url || vars.NEXT_PUBLIC_APP_URL || '' }}
 
       - name: Rollback on Smoke Test Failure
-        if: failure() && steps.previous.outputs.previous_id != ''
+        if: steps.smoke.outcome == 'failure' && steps.previous.outputs.previous_id != ''
         shell: bash
         run: |
           set -euo pipefail
@@ -102,6 +102,10 @@ jobs:
             --token="$VERCEL_TOKEN"
           echo "✅ Rollback initiated to previous deployment: ${{ steps.previous.outputs.previous_id }}"
 
+      - name: Rollback skipped (no previous deployment found)
+        if: steps.smoke.outcome == 'failure' && steps.previous.outputs.previous_id == ''
+        run: echo "⚠️ Smoke tests failed but no previous deployment was found for rollback."
+
       - name: Create Issue on Failure
         if: steps.smoke.outcome == 'failure'
         uses: actions/github-script@v7
@@ -109,19 +113,16 @@ jobs:
           DEPLOYMENT_URL: ${{ steps.deploy.outputs.deployment_url }}
         with:
           script: |
-            const title = `🚨 Production Deploy Failed - ${new Date().toISOString().split('T')[0]}`;
+            const title = `🔴 Production deploy failed — ${new Date().toISOString().split('T')[0]}`;
             const body =
-              `## Production Deployment Failure\n\n` +
+              `## Deploy Failure Report\n\n` +
               `**Commit:** ${context.sha}\n` +
-              `**Branch:** ${context.ref}\n` +
-              `**Workflow Run:** ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}\n` +
-              `**Deployment URL:** ${process.env.DEPLOYMENT_URL}\n\n` +
-              `### What happened\n` +
-              `Smoke tests failed after production deployment. Automatic rollback was triggered.\n\n` +
-              `### Action Required\n` +
-              `1. Review the smoke test logs in the workflow run\n` +
-              `2. Fix the issue\n` +
-              `3. Push a new commit to main\n`;
+              `**Branch:** main\n` +
+              `**Run:** ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}\n` +
+              `**Deployment URL:** ${process.env.DEPLOYMENT_URL}\n` +
+              `**Smoke tests:** FAILED\n` +
+              `**Rollback:** Executed automatically when previous deployment was available\n\n` +
+              `Please investigate immediately.\n`;
 
             try {
               await github.rest.issues.create({
@@ -140,50 +141,34 @@ jobs:
               });
             }
 
-      - name: Notify Success (Slack)
-        if: steps.smoke.outcome == 'success' && env.SLACK_WEBHOOK_URL != ''
+      - name: Notify deployment status
+        if: always()
         shell: bash
         run: |
           set -euo pipefail
-          curl -fsS -X POST "$SLACK_WEBHOOK_URL" \
-            -H "Content-Type: application/json" \
-            -d "{
-              \"text\": \"✅ *METAMEN100 Production Deploy*\nCommit: \`${GITHUB_SHA::7}\`\nURL: ${{ steps.deploy.outputs.deployment_url }}\nSmoke tests: PASSED\"
-            }"
+          if [ "${{ steps.smoke.outcome }}" = "failure" ]; then
+            STATUS="❌ FAILED (rollback executed)"
+          else
+            STATUS="✅ SUCCESS"
+          fi
 
-      - name: Notify Failure (Slack)
-        if: steps.smoke.outcome == 'failure' && env.SLACK_WEBHOOK_URL != ''
-        shell: bash
-        run: |
-          set -euo pipefail
-          curl -fsS -X POST "$SLACK_WEBHOOK_URL" \
-            -H "Content-Type: application/json" \
-            -d "{
-              \"text\": \"🚨 *METAMEN100 Production Deploy FAILED*\nCommit: \`${GITHUB_SHA::7}\`\n⚠️ Automatic rollback triggered.\nRun: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}\"
-            }"
+          MESSAGE="METAMEN100 Production Deploy: ${STATUS}\nCommit: ${GITHUB_SHA}\nURL: ${{ steps.deploy.outputs.deployment_url }}\nRun: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          echo "Deploy status: ${STATUS}"
 
-      - name: Notify Success (Discord)
-        if: steps.smoke.outcome == 'success' && env.DISCORD_WEBHOOK_URL != ''
-        shell: bash
-        run: |
-          set -euo pipefail
-          curl -fsS -X POST "$DISCORD_WEBHOOK_URL" \
-            -H "Content-Type: application/json" \
-            -d "{
-              \"content\": \"✅ **METAMEN100 Production Deploy**\nCommit: \`${GITHUB_SHA::7}\`\nURL: ${{ steps.deploy.outputs.deployment_url }}\nSmoke tests: PASSED\"
-            }"
+          if [ -n "${SLACK_WEBHOOK_URL:-}" ]; then
+            curl -fsS -X POST "$SLACK_WEBHOOK_URL" \
+              -H "Content-Type: application/json" \
+              -d "{\"text\":\"${MESSAGE}\"}" || true
+          fi
 
-      - name: Notify Failure (Discord)
-        if: steps.smoke.outcome == 'failure' && env.DISCORD_WEBHOOK_URL != ''
-        shell: bash
-        run: |
-          set -euo pipefail
-          curl -fsS -X POST "$DISCORD_WEBHOOK_URL" \
-            -H "Content-Type: application/json" \
-            -d "{
-              \"content\": \"🚨 **METAMEN100 Production Deploy FAILED**\nCommit: \`${GITHUB_SHA::7}\`\n⚠️ Automatic rollback triggered.\nRun: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}\"
-            }"
+          if [ -n "${DISCORD_WEBHOOK_URL:-}" ]; then
+            curl -fsS -X POST "$DISCORD_WEBHOOK_URL" \
+              -H "Content-Type: application/json" \
+              -d "{\"content\":\"${MESSAGE}\"}" || true
+          fi
 
       - name: Fail if smoke tests failed
         if: steps.smoke.outcome == 'failure'
-        run: exit 1
+        run: |
+          echo "Smoke tests failed. Workflow marked as failed."
+          exit 1

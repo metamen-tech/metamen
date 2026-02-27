@@ -16,12 +16,12 @@
 | ----------------------- | -------------------------------------------------------------------------------------------------- |
 | Fase actual             | MVP v1.0                                                                                           |
 | Caja en curso           | **CAJA MVP-02: Infraestructura**                                                                   |
-| Última tarea completada | `02.4.9-FIX` — Reparación workflow production + smoke tests (estado CAJA_2)                        |
+| Última tarea completada | `02.4.7-02.4.9-AUDIT-FIX` — Corrección integral de auditoría CI/CD + branch protection            |
 | Próxima tarea           | `02.4.3` — Pendiente definición                                                                    |
 | Bloqueadores            | Ninguno                                                                                            |
 | Fecha inicio proyecto   | 2026-02-21                                                                                         |
-| Último commit           | `PENDIENTE` — fix(02): repair production deploy workflow and smoke tests for current project state |
-| Branch                  | main                                                                                               |
+| Último commit           | `dfe1731` — fix(ci): install pnpm before setup-node in lighthouse workflow                        |
+| Branch                  | fix/audit-issues-02.4.7-8-9                                                                        |
 
 ## MAPA DE PROGRESO
 
@@ -407,6 +407,17 @@ FORMATO POR TAREA:
 - **Commit**: `PENDIENTE` — fix(02): repair production deploy workflow and smoke tests for current project state
 - **Notas**: Se eliminaron validaciones de Redis/Upstash y de integraciones no implementadas en CAJA_2. Se dejó `TODO` explícito en smoke test para ampliar checks cuando existan endpoints e integraciones reales.
 
+### [02.4.7-02.4.9-AUDIT-FIX] — Corrección integral de auditoría CI/CD + branch protection
+
+- **Estado**: ✅ COMPLETADA
+- **Fecha**: 2026-02-26 23:49
+- **Tipo**: [CONFIG]
+- **Archivos creados/modificados**: `.github/dependabot.yml`, `.github/workflows/dependabot-auto-merge.yml`, `.github/workflows/lighthouse.yml`, `.github/workflows/production.yml`, `scripts/smoke-test-production.ts`, `src/app/api/health/route.ts`, `package.json`, `pnpm-lock.yaml`, `bitacora.md`; eliminado `.github/workflows/.gitkeep`
+- **Tests**: `pnpm type-check` ✅; `pnpm build` ✅; `pnpm lint` ✅; hooks de push `pnpm type-check` + `pnpm test --run` ✅
+- **Validación**: smoke test reescrito con 4 checks estrictos (`/`, `/api/health`, `/api/cron/judgement`, metadata) y reporte formal ✅; endpoint `/api/health` con 7 servicios (supabase, stripe, gemini, upstash, inngest, sentry, posthog) y timeout por servicio ✅; rollback de `production.yml` corregido por `steps.smoke.outcome == 'failure'` ✅; notificación unificada y tolerante a secrets ausentes ✅; Lighthouse migra a `pnpm exec lhci` + `@lhci/cli` dev dependency ✅; `dependabot.yml` agrega grupo `@upstash/*` ✅; workflow `dependabot-auto-merge.yml` creado para parches ✅; Branch Protection de `main` actualizado con `strict`, `dismiss_stale_reviews`, `enforce_admins`, `required_linear_history` y checks de tests shard 1/2 y 2/2 ✅; `allow_auto_merge=true` habilitado en repo ✅
+- **Commit**: `02f7824` + `dfe1731`
+- **Notas**: PR abierto: `#18` (`fix(ci): close audit gaps for 02.4.7/02.4.8/02.4.9`). `CI` y `Lighthouse CI` en verde en PR tras fix de orden de setup de pnpm. `Production Deploy` mantiene trigger exclusivo `push main`, por lo que su validación end-to-end queda atada al merge.
+
 ---
 
 ## ISSUES Y DEUDA TÉCNICA
@@ -458,3 +469,4 @@ FORMATO POR TAREA:
 - 2026-02-26 02:24 — Completada tarea 02.4.8: agregado `.github/workflows/lighthouse.yml` + `lighthouserc.js` para auditorías Lighthouse en PR, artifact de reportes y comentario idempotente con scores por URL.
 - 2026-02-26 02:49 — Completada tarea 02.4.9: agregado `.github/workflows/production.yml` (deploy prod + smoke tests + rollback + issue/notificaciones), `scripts/smoke-test-production.ts` y endpoint `src/app/api/health/route.ts`.
 - 2026-02-26 22:10 — Completada tarea 02.4.9-FIX: reparación integral de `production.yml`, `smoke-test-production.ts`, y hardening de `ci.yml`/`security.yml` a versiones estables de actions; validación local en verde (`type-check`, `lint`, smoke script).
+- 2026-02-26 23:49 — Completada tarea 02.4.7-02.4.9-AUDIT-FIX: smoke test full spec + health checks de 7 servicios + rollback por outcome + auto-merge dependabot + branch protection reforzada en `main` + repo `allow_auto_merge=true`.
