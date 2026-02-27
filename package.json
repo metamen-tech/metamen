@@ -83,7 +83,7 @@
     "@types/uuid": "^10.0.0",
     "@vitest/coverage-v8": "~2.1.9",
     "babel-plugin-react-compiler": "^1.0.0",
-    "eslint": "^9.0.0",
+    "eslint": "^10.0.2",
     "eslint-config-next": "~15.5.12",
     "eslint-config-prettier": "^10.1.8",
     "eslint-import-resolver-typescript": "^4.4.4",
