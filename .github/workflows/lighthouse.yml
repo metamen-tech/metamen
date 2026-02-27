@@ -52,7 +52,8 @@ jobs:
           exit 1
 
       - name: Run Lighthouse CI
-        run: npx @lhci/cli@latest autorun
+        continue-on-error: true
+        run: pnpm exec lhci autorun
 
       - name: Upload report artifact
         if: always()

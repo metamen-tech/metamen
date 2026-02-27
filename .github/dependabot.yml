@@ -27,6 +27,9 @@ updates:
       supabase:
         patterns:
           - '@supabase/*'
+      upstash:
+        patterns:
+          - '@upstash/*'
       radix:
         patterns:
           - '@radix-ui/*'
