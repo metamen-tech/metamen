@@ -67,7 +67,7 @@
   "devDependencies": {
     "@commitlint/cli": "^20.4.2",
     "@commitlint/config-conventional": "^20.4.2",
-    "@eslint/eslintrc": "^3.3.4",
+    "@eslint/eslintrc": "^3.3.5",
     "@lhci/cli": "0.14.0",
     "@next/eslint-plugin-next": "^15.5.12",
     "@playwright/test": "^1.50.0",
@@ -83,7 +83,7 @@
     "@types/uuid": "^10.0.0",
     "@vitest/coverage-v8": "~2.1.9",
     "babel-plugin-react-compiler": "^1.0.0",
-    "eslint": "^9.0.0",
+    "eslint": "^10.0.3",
     "eslint-config-next": "~15.5.12",
     "eslint-config-prettier": "^10.1.8",
     "eslint-import-resolver-typescript": "^4.4.4",
