@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v5
         with:
           version: 10.28.2
       - uses: actions/setup-node@v4
@@ -42,7 +42,7 @@ jobs:
     if: github.event_name != 'pull_request' || github.actor != 'dependabot[bot]'
     steps:
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v5
         with:
           version: 10.28.2
       - uses: actions/setup-node@v4
